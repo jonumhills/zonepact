@@ -8,6 +8,12 @@ ZonePact Intelligence is a pay-per-query AI agent that answers questions about r
 
 ---
 
+## Demo
+
+<div style="position: relative; padding-bottom: 64.86486486486486%; height: 0;"><iframe src="https://www.loom.com/embed/e172c0096ed54ee89a7c98e73ce26f0c" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
+
+---
+
 ## The Problem
 
 When a DeFi protocol like Aave or Centrifuge underwrites a real-world asset loan, they need to know: *is this parcel being rezoned?* An active rezoning petition can wipe 30–60% off land value overnight. Today, that verification costs $5–8k and takes 2–4 weeks through title companies and consultants.

@@ -42,12 +42,17 @@ export default function Landing() {
           <span className="text-xs text-emerald-400">426 rezoning petitions verified on Base Sepolia</span>
         </div>
 
-        <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-tight mb-6 max-w-3xl mx-auto">
+        <h1 className="text-5xl md:text-7xl font-black tracking-tight mb-3"
+          style={{ background: 'linear-gradient(135deg, #f97316 0%, #58a6ff 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+          ZonePact
+        </h1>
+
+        <h2 className="text-3xl md:text-5xl font-bold tracking-tight leading-tight mb-6 max-w-3xl mx-auto">
           Land verification{' '}
           <span style={{ background: 'linear-gradient(135deg, #58a6ff 0%, #38bdf8 50%, #34d399 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
             without the $5k consultant
           </span>
-        </h1>
+        </h2>
 
         <p className="text-base md:text-lg text-gray-400 max-w-xl mx-auto mb-10 leading-relaxed">
           Ask an AI about any parcel or address. Get the full rezoning history,
@@ -97,10 +102,10 @@ export default function Landing() {
               <div className="text-xs px-3 py-2.5 rounded-xl rounded-tl-sm flex-1 space-y-1.5"
                 style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
                 <p className="font-bold text-white text-[11px]">3902 STRATFORD CT, Raleigh NC</p>
-                <p className="text-gray-400 text-[10px]"><span className="text-gray-500">PIN</span> 1705485362 · <span className="text-gray-500">Owner</span> STABLER, MATTHEW H</p>
+                <p className="text-gray-400 text-[10px]"><span className="text-gray-500">PIN</span> 1705485362 · <span className="text-gray-500">Owner</span> STRATFORD COURT LLC</p>
                 <div className="h-px bg-white/6 my-1" />
                 <p className="text-[10px] font-semibold text-blue-300">Active Petition: Z-32-2023</p>
-                <p className="text-[10px] text-gray-400">Zoning change: <span className="text-blue-300">R-4 → Residential-4</span></p>
+                <p className="text-[10px] text-gray-400">Zoning change: <span className="text-amber-400">NB-2</span> → <span className="text-emerald-400">MU-2</span> · Approved 5–1</p>
                 <div className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full mt-1"
                   style={{ background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.25)', color: '#34d399' }}>
                   ⛓ Verified on Base Sepolia · May 7 2026

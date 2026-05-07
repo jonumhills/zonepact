@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ZonePact — Pitch Deck</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:#fff;color:#111827}
+
+/* ── Slide shell ── */
+.slide{
+  width:1280px;height:720px;position:relative;overflow:hidden;
+  background:#ffffff;page-break-after:always;break-after:page;
+  display:flex;flex-direction:column;
+}
+
+@media print{
+  @page{size:1280px 720px landscape;margin:0}
+  body{background:#ffffff;-webkit-print-color-adjust:exact;print-color-adjust:exact;background:#fff}
+  .slide{page-break-after:always;break-after:page}
+}
+
+/* ── Gradient utilities ── */
+.grad-text{background:linear-gradient(135deg,#f97316,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.grad-text-rev{background:linear-gradient(135deg,#3b82f6,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.grad-bg{background:linear-gradient(135deg,#f97316,#3b82f6)}
+.grad-border{border:1.5px solid transparent;background:linear-gradient(#fff,#fff) padding-box,linear-gradient(135deg,#f9731640,#3b82f640) border-box}
+
+/* ── Glow blobs ── */
+.blob{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;opacity:0.18}
+.blob-orange{background:#f97316}
+.blob-blue{background:#3b82f6}
+
+/* ── Typography ── */
+.overline{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#6b7280}
+.slide-title{font-size:52px;font-weight:900;line-height:1.05;letter-spacing:-.03em}
+.slide-subtitle{font-size:18px;color:#4b5563;line-height:1.5;font-weight:400}
+.label{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+
+/* ── Card ── */
+.card{background:rgba(0,0,0,.04);border:1px solid rgba(0,0,0,.07);border-radius:16px;padding:24px}
+.card-orange{background:rgba(249,115,22,.06);border:1px solid rgba(249,115,22,.18);border-radius:16px;padding:24px}
+.card-blue{background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.18);border-radius:16px;padding:24px}
+.card-green{background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.18);border-radius:16px;padding:24px}
+.card-purple{background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.18);border-radius:16px;padding:24px}
+
+/* ── Logo SVG inline ── */
+.logo-mark svg{display:block}
+
+/* ── Pill / badge ── */
+.pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600}
+.pill-orange{background:rgba(249,115,22,.12);color:#f97316;border:1px solid rgba(249,115,22,.25)}
+.pill-blue{background:rgba(37,99,235,.1);color:#1d4ed8;border:1px solid rgba(37,99,235,.25)}
+.pill-green{background:rgba(4,120,87,.1);color:#047857;border:1px solid rgba(4,120,87,.25)}
+.pill-purple{background:rgba(109,40,217,.1);color:#6d28d9;border:1px solid rgba(109,40,217,.25)}
+.pill-white{background:rgba(0,0,0,.05);color:#374151;border:1px solid rgba(0,0,0,.09)}
+
+/* ── Bottom bar ── */
+.bottom-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#f97316,#3b82f6)}
+.slide-num{position:absolute;bottom:18px;right:32px;font-size:11px;color:#9ca3af;font-weight:500}
+.watermark{position:absolute;bottom:18px;left:32px;font-size:11px;color:#9ca3af;font-weight:500;display:flex;align-items:center;gap:6px}
+
+/* ── Divider ── */
+.divider{width:40px;height:3px;border-radius:2px;background:linear-gradient(90deg,#f97316,#3b82f6);margin:12px 0 20px}
+
+/* ── Flow arrow ── */
+.arrow{color:#374151;font-size:18px;display:flex;align-items:center;flex-shrink:0}
+
+/* ── Stat box ── */
+.stat{text-align:center}
+.stat-num{font-size:42px;font-weight:900;line-height:1;letter-spacing:-.04em}
+.stat-label{font-size:11px;color:#6b7280;font-weight:500;margin-top:4px}
+
+/* ── Step ── */
+.step{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px}
+.step-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center}
+.step-num{font-size:10px;font-weight:700;color:#6b7280;letter-spacing:.1em}
+.step-title{font-size:14px;font-weight:700;color:#111827;line-height:1.3}
+.step-desc{font-size:11px;color:#6b7280;line-height:1.5}
+
+/* ── Inline logo ── */
+.inline-logo{display:flex;align-items:center;gap:8px}
+.inline-logo span{font-size:15px;font-weight:800;color:#111827;letter-spacing:-.01em}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 1: COVER -->
+<div class="slide" style="justify-content:center;align-items:center">
+  <div class="blob blob-orange" style="width:500px;height:500px;top:-180px;left:-100px"></div>
+  <div class="blob blob-blue" style="width:500px;height:500px;bottom:-200px;right:-80px"></div>
+
+  <div style="text-align:center;position:relative;z-index:1;max-width:900px">
+    <!-- Logo -->
+    <div style="display:flex;justify-content:center;margin-bottom:28px">
+      <svg width="72" height="86" viewBox="0 0 160 192" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#f97316"/><stop offset="100%" stop-color="#3b82f6"/>
+          </linearGradient>
+          <linearGradient id="g1bg" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#f97316" stop-opacity=".12"/><stop offset="100%" stop-color="#3b82f6" stop-opacity=".12"/>
+          </linearGradient>
+        </defs>
+        <polygon points="80,16 132,46 132,106 80,136 28,106 28,46" fill="url(#g1bg)" stroke="url(#g1)" stroke-width="2.5"/>
+        <path fill-rule="evenodd" fill="url(#g1)" d="M80,48 A20,20 0 0,1 98,76 L80,118 L62,76 A20,20 0 0,1 80,48 Z M80,60 A8,8 0 1,0 80,76 A8,8 0 1,0 80,60 Z"/>
+      </svg>
+    </div>
+
+    <p class="overline" style="color:#6b7280;margin-bottom:16px">Coinbase × AWS Agentic Hackathon 2025</p>
+    <h1 style="font-size:72px;font-weight:900;line-height:1;letter-spacing:-.04em;margin-bottom:6px">
+      <span class="grad-text">ZonePact</span>
+    </h1>
+    <h2 style="font-size:26px;font-weight:700;color:#1f2937;margin-bottom:20px;letter-spacing:-.01em">
+      Blockchain-verified land records for the AI economy
+    </h2>
+    <p style="font-size:16px;color:#6b7280;max-width:580px;margin:0 auto 36px;line-height:1.6">
+      A $0.001 AI query replaces the $5–8k consultant verification that DeFi protocols need before underwriting real-world asset loans.
+    </p>
+
+    <!-- Stats bar -->
+    <div style="display:flex;gap:0;justify-content:center;border:1px solid rgba(0,0,0,.07);border-radius:16px;background:rgba(0,0,0,.03);overflow:hidden;max-width:680px;margin:0 auto">
+      <div style="flex:1;padding:16px 24px;border-right:1px solid rgba(0,0,0,.07);text-align:center">
+        <div style="font-size:28px;font-weight:900;background:linear-gradient(135deg,#f97316,#fb923c);-webkit-background-clip:text;-webkit-text-fill-color:transparent">426</div>
+        <div style="font-size:10px;color:#6b7280;margin-top:3px;font-weight:500">Petitions On-Chain</div>
+      </div>
+      <div style="flex:1;padding:16px 24px;border-right:1px solid rgba(0,0,0,.07);text-align:center">
+        <div style="font-size:28px;font-weight:900;background:linear-gradient(135deg,#3b82f6,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent">434k</div>
+        <div style="font-size:10px;color:#6b7280;margin-top:3px;font-weight:500">Parcels Indexed</div>
+      </div>
+      <div style="flex:1;padding:16px 24px;border-right:1px solid rgba(0,0,0,.07);text-align:center">
+        <div style="font-size:28px;font-weight:900;background:linear-gradient(135deg,#10b981,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent">$0.001</div>
+        <div style="font-size:10px;color:#6b7280;margin-top:3px;font-weight:500">Per AI Query</div>
+      </div>
+      <div style="flex:1;padding:16px 24px;text-align:center">
+        <div style="font-size:28px;font-weight:900;background:linear-gradient(135deg,#a78bfa,#c4b5fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent">&lt;3s</div>
+        <div style="font-size:10px;color:#6b7280;margin-top:3px;font-weight:500">Verified Result</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar"></div>
+  <div class="slide-num">1 / 10</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 2: PROBLEM -->
+<div class="slide" style="padding:56px 72px">
+  <div class="blob blob-orange" style="width:400px;height:400px;top:-200px;right:-100px;opacity:.12"></div>
+
+  <p class="overline" style="color:#f97316;margin-bottom:10px">The Problem</p>
+  <h2 class="slide-title" style="max-width:720px;margin-bottom:6px">
+    DeFi lends against land.<br>
+    <span class="grad-text">Land records are broken.</span>
+  </h2>
+  <div class="divider"></div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-top:8px">
+    <!-- Pain 1 -->
+    <div class="card-orange">
+      <div style="font-size:36px;font-weight:900;color:#f97316;margin-bottom:8px">$5–8k</div>
+      <div style="font-size:13px;font-weight:700;color:#111827;margin-bottom:6px">Per title search</div>
+      <div style="font-size:12px;color:#4b5563;line-height:1.6">Before Centrifuge or Aave underwrites a real-world asset loan, a title company charges $5–8k to verify the parcel's zoning status. Takes 2–4 weeks.</div>
+    </div>
+    <!-- Pain 2 -->
+    <div class="card-orange">
+      <div style="font-size:36px;font-weight:900;color:#f97316;margin-bottom:8px">–60%</div>
+      <div style="font-size:13px;font-weight:700;color:#111827;margin-bottom:6px">Rezoning wipes value</div>
+      <div style="font-size:12px;color:#4b5563;line-height:1.6">An active rezoning petition can eliminate 30–60% of land value overnight. If a protocol misses it, collateral is worthless. There is no automated early-warning system.</div>
+    </div>
+    <!-- Pain 3 -->
+    <div class="card-orange">
+      <div style="font-size:36px;font-weight:900;color:#f97316;margin-bottom:8px">0</div>
+      <div style="font-size:13px;font-weight:700;color:#111827;margin-bottom:6px">On-chain proof</div>
+      <div style="font-size:12px;color:#4b5563;line-height:1.6">County zoning records are PDFs, OnBase portals, or physical documents. No API. No cryptographic proof. Every DeFi protocol starts from scratch each time.</div>
+    </div>
+  </div>
+
+  <!-- Who feels this -->
+  <div style="margin-top:20px;padding:16px 20px;border-radius:12px;background:rgba(0,0,0,.03);border:1px solid rgba(0,0,0,.07);display:flex;align-items:center;gap:32px">
+    <p style="font-size:11px;color:#6b7280;font-weight:600;white-space:nowrap;text-transform:uppercase;letter-spacing:.1em">Who feels this now:</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <span class="pill pill-blue">Centrifuge — RWA lending</span>
+      <span class="pill pill-blue">Aave — Real estate collateral</span>
+      <span class="pill pill-white">Goldfinch — Emerging market loans</span>
+      <span class="pill pill-white">RE Investors — due diligence</span>
+      <span class="pill pill-white">Urban planners — zoning analysis</span>
+    </div>
+  </div>
+
+  <div class="bottom-bar"></div>
+  <div class="slide-num">2 / 10</div>
+  <div class="watermark">
+    <svg width="14" height="16" viewBox="0 0 160 192" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="wg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f97316"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient></defs><polygon points="80,16 132,46 132,106 80,136 28,106 28,46" fill="none" stroke="url(#wg)" stroke-width="8"/><path fill-rule="evenodd" fill="url(#wg)" d="M80,48 A20,20 0 0,1 98,76 L80,118 L62,76 A20,20 0 0,1 80,48 Z M80,60 A8,8 0 1,0 80,76 A8,8 0 1,0 80,60 Z"/></svg>
+    ZonePact Intelligence
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 3: SOLUTION -->
+<div class="slide" style="padding:56px 72px">
+  <div class="blob blob-blue" style="width:400px;height:400px;bottom:-200px;left:-100px;opacity:.12"></div>
+
+  <p class="overline" style="color:#3b82f6;margin-bottom:10px">The Solution</p>
+  <h2 class="slide-title" style="margin-bottom:6px">
+    One query. <span class="grad-text">Cryptographic proof.</span>
+  </h2>
+  <div class="divider"></div>
+
+  <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:28px;margin-top:4px">
+    <!-- Left: description -->
+    <div>
+      <p style="font-size:15px;color:#374151;line-height:1.7;margin-bottom:20px">
+        ZonePact is a <strong style="color:#111827">pay-per-query AI agent</strong> that answers questions about rezoning petitions and land records. Every verified result is stored as a tamper-proof record on <strong style="color:#1d4ed8">Base Sepolia</strong> via the <strong style="color:#047857">ZonePactRegistry</strong> smart contract.
+      </p>
+
+      <!-- Before / After -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div style="padding:16px;border-radius:12px;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2)">
+          <p style="font-size:10px;color:#f87171;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Before ZonePact</p>
+          <ul style="list-style:none;font-size:12px;color:#4b5563;line-height:2">
+            <li>✗ &nbsp;$5,000–$8,000 title search</li>
+            <li>✗ &nbsp;2–4 week turnaround</li>
+            <li>✗ &nbsp;No cryptographic proof</li>
+            <li>✗ &nbsp;No early-warning alerts</li>
+          </ul>
+        </div>
+        <div style="padding:16px;border-radius:12px;background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.2)">
+          <p style="font-size:10px;color:#047857;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">With ZonePact</p>
+          <ul style="list-style:none;font-size:12px;color:#4b5563;line-height:2">
+            <li>✓ &nbsp;$0.001 per query</li>
+            <li>✓ &nbsp;&lt;3 second response</li>
+            <li>✓ &nbsp;On-chain proof (Base Sepolia)</li>
+            <li>✓ &nbsp;SNS alerts when rezoned</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: key attributes -->
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="card" style="display:flex;gap:14px;align-items:flex-start;padding:16px 18px">
+        <div style="width:36px;height:36px;border-radius:10px;background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="16" height="16" fill="none" stroke="#f97316" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
+        </div>
+        <div>
+          <p style="font-size:13px;font-weight:700;color:#111827;margin-bottom:3px">Claude on AWS Bedrock</p>
+          <p style="font-size:11px;color:#6b7280;line-height:1.5">Agentic tool-use loop — lookup, verify on-chain, explain in plain English</p>
+        </div>
+      </div>
+      <div class="card" style="display:flex;gap:14px;align-items:flex-start;padding:16px 18px">
+        <div style="width:36px;height:36px;border-radius:10px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="16" height="16" fill="none" stroke="#60a5fa" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"/></svg>
+        </div>
+        <div>
+          <p style="font-size:13px;font-weight:700;color:#111827;margin-bottom:3px">ZonePactRegistry — Base Sepolia</p>
+          <p style="font-size:11px;color:#6b7280;line-height:1.5">426 petitions on-chain. Immutable proof that replaces title reports.</p>
+        </div>
+      </div>
+      <div class="card" style="display:flex;gap:14px;align-items:flex-start;padding:16px 18px">
+        <div style="width:36px;height:36px;border-radius:10px;background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="16" height="16" fill="none" stroke="#a78bfa" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+        </div>
+        <div>
+          <p style="font-size:13px;font-weight:700;color:#111827;margin-bottom:3px">x402 Micropayment Gate</p>
+          <p style="font-size:11px;color:#6b7280;line-height:1.5">0.001 ETH per query via HTTP 402. AI agents pay autonomously — no signup.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar"></div>
+  <div class="slide-num">3 / 10</div>
+  <div class="watermark"><svg width="14" height="16" viewBox="0 0 160 192" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="wg2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f97316"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient></defs><polygon points="80,16 132,46 132,106 80,136 28,106 28,46" fill="none" stroke="url(#wg2)" stroke-width="8"/><path fill-rule="evenodd" fill="url(#wg2)" d="M80,48 A20,20 0 0,1 98,76 L80,118 L62,76 A20,20 0 0,1 80,48 Z M80,60 A8,8 0 1,0 80,76 A8,8 0 1,0 80,60 Z"/></svg>ZonePact Intelligence</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 4: CUSTOMERS -->
+<div class="slide" style="padding:56px 72px">
+  <div class="blob blob-blue" style="width:350px;height:350px;top:-150px;right:-80px;opacity:.1"></div>
+
+  <p class="overline" style="color:#3b82f6;margin-bottom:10px">Who Uses It</p>
+  <h2 class="slide-title" style="margin-bottom:6px">Built for protocols<br><span class="grad-text">lending against the real world</span></h2>
+  <div class="divider"></div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-top:8px">
+
+    <!-- Centrifuge -->
+    <div style="background:rgba(59,130,246,.05);border:1px solid rgba(59,130,246,.2);border-radius:18px;padding:28px;display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#1d4ed8">C</div>
+        <div>
+          <p style="font-size:15px;font-weight:800;color:#111827">Centrifuge</p>
+          <p style="font-size:10px;color:#6b7280">Real World Asset lending protocol</p>
+        </div>
+      </div>
+      <div style="width:100%;height:1px;background:rgba(59,130,246,.15)"></div>
+      <p style="font-size:12px;color:#4b5563;line-height:1.7">Before tokenizing a land-backed loan, Centrifuge needs to confirm the collateral's zoning status is clean. Today this means paying a title company.</p>
+      <div style="margin-top:auto;padding:12px 14px;border-radius:10px;background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.15)">
+        <p style="font-size:10px;color:#1d4ed8;font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px">With ZonePact API</p>
+        <p style="font-size:12px;color:#374151;line-height:1.6">Integrate <code style="font-size:11px;background:rgba(0,0,0,.07);padding:1px 5px;border-radius:4px">GET /api/chat</code> into their origination pipeline. $0.001 per parcel. Blockchain proof attached to every loan NFT.</p>
+      </div>
+    </div>
+
+    <!-- Aave -->
+    <div style="background:rgba(167,139,250,.05);border:1px solid rgba(167,139,250,.2);border-radius:18px;padding:28px;display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(167,139,250,.15);border:1px solid rgba(167,139,250,.3);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#6d28d9">A</div>
+        <div>
+          <p style="font-size:15px;font-weight:800;color:#111827">Aave</p>
+          <p style="font-size:10px;color:#6b7280">Largest DeFi lending protocol</p>
+        </div>
+      </div>
+      <div style="width:100%;height:1px;background:rgba(167,139,250,.15)"></div>
+      <p style="font-size:12px;color:#4b5563;line-height:1.7">As Aave expands into real estate collateral, borrowers post land as backing. A rezoning event mid-loan could wipe collateral value — with no automated detection.</p>
+      <div style="margin-top:auto;padding:12px 14px;border-radius:10px;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.15)">
+        <p style="font-size:10px;color:#6d28d9;font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px">With ZonePact SNS Alerts</p>
+        <p style="font-size:12px;color:#374151;line-height:1.6">Subscribe each collateral PIN to the SNS parcel-watch topic. Aave's liquidation bot receives an alert the day a rezoning petition is filed.</p>
+      </div>
+    </div>
+
+    <!-- RE Investors -->
+    <div style="background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.2);border-radius:18px;padding:28px;display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.3);display:flex;align-items:center;justify-content:center">
+          <svg width="20" height="20" fill="none" stroke="#34d399" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+        </div>
+        <div>
+          <p style="font-size:15px;font-weight:800;color:#111827">RE Investors</p>
+          <p style="font-size:10px;color:#6b7280">Due diligence at acquisition</p>
+        </div>
+      </div>
+      <div style="width:100%;height:1px;background:rgba(16,185,129,.15)"></div>
+      <p style="font-size:12px;color:#4b5563;line-height:1.7">Investors evaluating a land acquisition need to know if there's an active rezoning petition that could increase or destroy value before they close.</p>
+      <div style="margin-top:auto;padding:12px 14px;border-radius:10px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.15)">
+        <p style="font-size:10px;color:#047857;font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px">With ZonePact Intel</p>
+        <p style="font-size:12px;color:#374151;line-height:1.6">Type the address into the chat. Get owner, zoning, active petition, blockchain proof, and S3 report in 3 seconds. No consultant. No wait.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar"></div>
+  <div class="slide-num">4 / 10</div>
+  <div class="watermark"><svg width="14" height="16" viewBox="0 0 160 192" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="wg3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f97316"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient></defs><polygon points="80,16 132,46 132,106 80,136 28,106 28,46" fill="none" stroke="url(#wg3)" stroke-width="8"/><path fill-rule="evenodd" fill="url(#wg3)" d="M80,48 A20,20 0 0,1 98,76 L80,118 L62,76 A20,20 0 0,1 80,48 Z M80,60 A8,8 0 1,0 80,76 A8,8 0 1,0 80,60 Z"/></svg>ZonePact Intelligence</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 5: HOW IT WORKS -->
+<div class="slide" style="padding:56px 72px">
+  <p class="overline" style="color:#047857;margin-bottom:10px">How It Works</p>
+  <h2 class="slide-title" style="margin-bottom:6px">Five steps.<br><span class="grad-text">Verifiable end-to-end.</span></h2>
+  <div class="divider"></div>
+
+  <!-- Flow -->
+  <div style="display:flex;align-items:stretch;gap:0;margin-top:20px">
+
+    <div style="flex:1;background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.18);border-radius:16px 0 0 16px;padding:22px 18px;display:flex;flex-direction:column;gap:10px">
+      <div style="width:36px;height:36px;border-radius:10px;background:rgba(167,139,250,.15);display:flex;align-items:center;justify-content:center">
+        <svg width="16" height="16" fill="none" stroke="#a78bfa" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+      </div>
+      <p style="font-size:10px;color:#6d28d9;font-weight:700;text-transform:uppercase;letter-spacing:.1em">Step 1</p>
+      <p style="font-size:13px;font-weight:700;color:#111827">User types a query</p>
+      <p style="font-size:11px;color:#6b7280;line-height:1.5">"What is going on with 3902 Stratford Ct?" or a parcel PIN</p>
+    </div>
+
+    <div style="display:flex;align-items:center;padding:0 6px;background:rgba(0,0,0,.05)">
+      <svg width="14" height="14" fill="none" stroke="#374151" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+    </div>
+
+    <div style="flex:1;background:rgba(167,139,250,.06);border-top:1px solid rgba(167,139,250,.18);border-bottom:1px solid rgba(167,139,250,.18);padding:22px 18px;display:flex;flex-direction:column;gap:10px">
+      <div style="width:36px;height:36px;border-radius:10px;background:rgba(167,139,250,.15);display:flex;align-items:center;justify-content:center">
+        <svg width="16" height="16" fill="none" stroke="#a78bfa" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+      </div>
+      <p style="font-size:10px;color:#6d28d9;font-weight:700;text-transform:uppercase;letter-spacing:.1em">Step 2</p>
+      <p style="font-size:13px;font-weight:700;color:#111827">x402 micropayment</p>
+      <p style="font-size:11px;color:#6b7280;line-height:1.5">Wallet signs 0.001 ETH tx on Base Sepolia. Backend verifies on-chain before processing.</p>
+    </div>
+
+    <div style="display:flex;align-items:center;padding:0 6px;background:rgba(0,0,0,.05)">
+      <svg width="14" height="14" fill="none" stroke="#374151" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+    </div>
+
+    <div style="flex:1;background:rgba(249,115,22,.06);border:1px solid rgba(249,115,22,.18);padding:22px 18px;display:flex;flex-direction:column;gap:10px">
+      <div style="width:36px;height:36px;border-radius:10px;background:rgba(249,115,22,.15);display:flex;align-items:center;justify-content:center">
+        <svg width="16" height="16" fill="none" stroke="#f97316" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
+      </div>
+      <p style="font-size:10px;color:#f97316;font-weight:700;text-transform:uppercase;letter-spacing:.1em">Step 3</p>
+      <p style="font-size:13px;font-weight:700;color:#111827">Claude agent (Bedrock)</p>
+      <p style="font-size:11px;color:#6b7280;line-height:1.5">Calls <code style="font-size:10px;background:rgba(0,0,0,.07);padding:1px 4px;border-radius:3px">lookup_parcel</code> → Supabase. Calls <code style="font-size:10px;background:rgba(0,0,0,.07);padding:1px 4px;border-radius:3px">get_onchain_history</code> → Base Sepolia.</p>
+    </div>
+
+    <div style="display:flex;align-items:center;padding:0 6px;background:rgba(0,0,0,.05)">
+      <svg width="14" height="14" fill="none" stroke="#374151" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+    </div>
+
+    <div style="flex:1;background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.18);padding:22px 18px;display:flex;flex-direction:column;gap:10px">
+      <div style="width:36px;height:36px;border-radius:10px;background:rgba(59,130,246,.15);display:flex;align-items:center;justify-content:center">
+        <svg width="16" height="16" fill="none" stroke="#60a5fa" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"/></svg>
+      </div>
+      <p style="font-size:10px;color:#1d4ed8;font-weight:700;text-transform:uppercase;letter-spacing:.1em">Step 4</p>
+      <p style="font-size:13px;font-weight:700;color:#111827">On-chain verification</p>
+      <p style="font-size:11px;color:#6b7280;line-height:1.5">ZonePactRegistry returns zoning change + vote result + recorded_at timestamp. BaseScan link included.</p>
+    </div>
+
+    <div style="display:flex;align-items:center;padding:0 6px;background:rgba(0,0,0,.05)">
+      <svg width="14" height="14" fill="none" stroke="#374151" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+    </div>
+
+    <div style="flex:1;background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.18);border-radius:0 16px 16px 0;padding:22px 18px;display:flex;flex-direction:column;gap:10px">
+      <div style="width:36px;height:36px;border-radius:10px;background:rgba(16,185,129,.15);display:flex;align-items:center;justify-content:center">
+        <svg width="16" height="16" fill="none" stroke="#34d399" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+      <p style="font-size:10px;color:#047857;font-weight:700;text-transform:uppercase;letter-spacing:.1em">Step 5</p>
+      <p style="font-size:13px;font-weight:700;color:#111827">Report + Alert</p>
+      <p style="font-size:11px;color:#6b7280;line-height:1.5">S3 stores verified JSON report. SNS fires email alert. Map highlights parcel polygon.</p>
+    </div>
+
+  </div>
+
+  <!-- Query example -->
+  <div style="margin-top:20px;padding:14px 20px;border-radius:12px;background:rgba(0,0,0,.03);border:1px solid rgba(0,0,0,.07);display:flex;align-items:center;gap:16px">
+    <span style="font-size:11px;color:#6b7280;font-weight:600;white-space:nowrap">Example query:</span>
+    <code style="font-size:12px;color:#1d4ed8;background:rgba(59,130,246,.08);padding:4px 10px;border-radius:6px;border:1px solid rgba(59,130,246,.15)">"What is going on with 3902 Stratford Ct?"</code>
+    <span style="font-size:11px;color:#6b7280">→</span>
+    <span style="font-size:12px;color:#047857">Owner · PIN · Present zoning NB-2 → Proposed MU-2 · Petition Z-32-2023 · Approved 5-1 · ⛓ Verified on Base Sepolia</span>
+  </div>
+
+  <div class="bottom-bar"></div>
+  <div class="slide-num">5 / 10</div>
+  <div class="watermark"><svg width="14" height="16" viewBox="0 0 160 192" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="wg4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f97316"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient></defs><polygon points="80,16 132,46 132,106 80,136 28,106 28,46" fill="none" stroke="url(#wg4)" stroke-width="8"/><path fill-rule="evenodd" fill="url(#wg4)" d="M80,48 A20,20 0 0,1 98,76 L80,118 L62,76 A20,20 0 0,1 80,48 Z M80,60 A8,8 0 1,0 80,76 A8,8 0 1,0 80,60 Z"/></svg>ZonePact Intelligence</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 6: PRODUCT -->
+<div class="slide" style="padding:48px 64px">
+  <div class="blob blob-blue" style="width:300px;height:300px;top:-120px;right:-60px;opacity:.1"></div>
+
+  <p class="overline" style="color:#047857;margin-bottom:8px">Product Demo</p>
+  <h2 style="font-size:32px;font-weight:900;letter-spacing:-.02em;margin-bottom:16px">Real query. <span class="grad-text">Real result.</span></h2>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+
+    <!-- Mock chat -->
+    <div style="background:#f1f5f9;border:1px solid rgba(0,0,0,.1);border-radius:16px;overflow:hidden">
+      <!-- Header -->
+      <div style="padding:12px 16px;border-bottom:1px solid rgba(0,0,0,.07);display:flex;align-items:center;gap:8px">
+        <svg width="14" height="14" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
+        <span style="font-size:12px;font-weight:700;color:#111827">Intelligence</span>
+        <span style="font-size:9px;padding:2px 7px;border-radius:99px;background:rgba(88,166,255,.1);color:#58a6ff;border:1px solid rgba(88,166,255,.2)">x402</span>
+        <span style="font-size:9px;padding:2px 7px;border-radius:99px;background:rgba(249,115,22,.08);color:#f97316;border:1px solid rgba(249,115,22,.2)">Bedrock</span>
+      </div>
+      <!-- Messages -->
+      <div style="padding:14px 14px 10px;display:flex;flex-direction:column;gap:10px">
+        <!-- User msg -->
+        <div style="display:flex;justify-content:flex-end">
+          <div style="background:rgba(88,166,255,.18);border:1px solid rgba(88,166,255,.2);border-radius:12px 12px 2px 12px;padding:8px 12px;max-width:80%">
+            <p style="font-size:11px;color:#111827">What is going on with 3902 Stratford Ct?</p>
+          </div>
+        </div>
+        <!-- Agent msg -->
+        <div style="display:flex;gap:8px">
+          <div style="width:22px;height:22px;border-radius:50%;background:rgba(59,130,246,.2);border:1px solid rgba(59,130,246,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="11" height="11" fill="none" stroke="#60a5fa" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
+          </div>
+          <div style="background:rgba(0,0,0,.04);border:1px solid rgba(0,0,0,.07);border-radius:2px 12px 12px 12px;padding:10px 12px;flex:1">
+            <p style="font-size:11px;font-weight:700;color:#111827;margin-bottom:4px">3902 Stratford Ct, Raleigh NC</p>
+            <p style="font-size:10px;color:#4b5563;margin-bottom:6px"><span style="color:#374151;font-weight:600">PIN:</span> 1705485362 &nbsp;·&nbsp; <span style="color:#374151;font-weight:600">Owner:</span> STRATFORD COURT LLC</p>
+            <p style="font-size:10px;color:#4b5563;margin-bottom:8px"><span style="color:#374151;font-weight:600">Land Use:</span> Commercial &nbsp;·&nbsp; <span style="color:#374151;font-weight:600">Value:</span> $1,240,000</p>
+            <div style="height:1px;background:rgba(0,0,0,.05);margin-bottom:8px"></div>
+            <p style="font-size:10px;font-weight:700;color:#f97316;margin-bottom:4px">Active Petition: Z-32-2023</p>
+            <p style="font-size:10px;color:#4b5563;margin-bottom:2px">Change: <span style="color:#b45309">NB-2</span> → <span style="color:#047857">MU-2</span> &nbsp;·&nbsp; Vote: Approved 5–1</p>
+            <div style="display:flex;align-items:center;gap:5px;margin-top:6px;padding:4px 8px;border-radius:6px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);width:fit-content">
+              <span style="font-size:10px;color:#047857">⛓ Verified on Base Sepolia · Recorded Apr 12 2024</span>
+            </div>
+            <div style="display:flex;gap:4px;margin-top:8px">
+              <span style="font-size:9px;padding:1px 6px;border-radius:4px;background:rgba(88,166,255,.1);color:#58a6ff;border:1px solid rgba(88,166,255,.15)">lookup_parcel</span>
+              <span style="font-size:9px;padding:1px 6px;border-radius:4px;background:rgba(88,166,255,.1);color:#58a6ff;border:1px solid rgba(88,166,255,.15)">get_onchain_history</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Map + stats -->
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <!-- Mock map -->
+      <div style="flex:1;border-radius:16px;overflow:hidden;position:relative;background:linear-gradient(135deg,#0d1b2a 0%,#0a1628 50%,#071220 100%);border:1px solid rgba(0,0,0,.07)">
+        <!-- Grid lines -->
+        <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:.12" xmlns="http://www.w3.org/2000/svg">
+          <defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#3b82f6" stroke-width=".5"/></pattern></defs>
+          <rect width="100%" height="100%" fill="url(#grid)"/>
+        </svg>
+        <!-- Highlighted parcel -->
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60px;height:44px;background:rgba(251,191,36,.45);border:2px solid #fbbf24;border-radius:4px"></div>
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-320%);background:#ffffff;border:1px solid rgba(251,191,36,.4);border-radius:8px;padding:5px 10px;white-space:nowrap">
+          <p style="font-size:10px;color:#b45309;font-weight:700">Z-32-2023 · Active</p>
+        </div>
+        <!-- Parcel dots -->
+        <div style="position:absolute;top:30%;left:30%;width:10px;height:8px;background:rgba(59,130,246,.3);border:1px solid rgba(59,130,246,.5);border-radius:2px"></div>
+        <div style="position:absolute;top:60%;left:65%;width:14px;height:10px;background:rgba(59,130,246,.3);border:1px solid rgba(59,130,246,.5);border-radius:2px"></div>
+        <div style="position:absolute;top:40%;right:25%;width:12px;height:9px;background:rgba(59,130,246,.2);border:1px solid rgba(59,130,246,.4);border-radius:2px"></div>
+        <p style="position:absolute;bottom:8px;left:10px;font-size:9px;color:#374151">Raleigh NC · Wake County</p>
+      </div>
+
+      <!-- Mini stats -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="padding:12px 14px;border-radius:12px;background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.18)">
+          <p style="font-size:22px;font-weight:900;color:#047857">⛓</p>
+          <p style="font-size:11px;font-weight:700;color:#111827;margin-top:2px">On-chain proof</p>
+          <p style="font-size:10px;color:#6b7280">Base Sepolia · BaseScan link</p>
+        </div>
+        <div style="padding:12px 14px;border-radius:12px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.18)">
+          <p style="font-size:22px;font-weight:900;color:#b45309">↓</p>
+          <p style="font-size:11px;font-weight:700;color:#111827;margin-top:2px">S3 Report</p>
+          <p style="font-size:10px;color:#6b7280">7-day presigned download</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar"></div>
+  <div class="slide-num">6 / 10</div>
+  <div class="watermark"><svg width="14" height="16" viewBox="0 0 160 192" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="wg5" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f97316"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient></defs><polygon points="80,16 132,46 132,106 80,136 28,106 28,46" fill="none" stroke="url(#wg5)" stroke-width="8"/><path fill-rule="evenodd" fill="url(#wg5)" d="M80,48 A20,20 0 0,1 98,76 L80,118 L62,76 A20,20 0 0,1 80,48 Z M80,60 A8,8 0 1,0 80,76 A8,8 0 1,0 80,60 Z"/></svg>ZonePact Intelligence</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 7: TECH STACK -->
+<div class="slide" style="padding:56px 72px">
+  <div class="blob blob-orange" style="width:350px;height:350px;bottom:-150px;right:-80px;opacity:.1"></div>
+
+  <p class="overline" style="color:#f97316;margin-bottom:10px">Tech Stack</p>
+  <h2 class="slide-title" style="margin-bottom:6px"><span class="grad-text">AI × Blockchain × Cloud</span><br>in one pipeline</h2>
+  <div class="divider"></div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;margin-top:8px">
+
+    <div class="card-orange" style="display:flex;flex-direction:column;gap:12px">
+      <div style="width:42px;height:42px;border-radius:12px;background:rgba(249,115,22,.15);border:1px solid rgba(249,115,22,.25);display:flex;align-items:center;justify-content:center">
+        <svg width="20" height="20" fill="none" stroke="#f97316" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
+      </div>
+      <div>
+        <p style="font-size:13px;font-weight:800;color:#111827;margin-bottom:4px">Claude on AWS Bedrock</p>
+        <p style="font-size:11px;color:#4b5563;line-height:1.6">Agentic tool-use loop. Multi-step reasoning: lookup → verify → explain.</p>
+      </div>
+      <div style="margin-top:auto">
+        <p style="font-size:10px;font-mono;color:#f97316;font-family:monospace">anthropic.claude-opus-4-5</p>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">
+          <span class="pill pill-orange">Bedrock</span>
+          <span class="pill pill-orange">S3</span>
+          <span class="pill pill-orange">SNS</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-blue" style="display:flex;flex-direction:column;gap:12px">
+      <div style="width:42px;height:42px;border-radius:12px;background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.25);display:flex;align-items:center;justify-content:center">
+        <svg width="20" height="20" fill="none" stroke="#60a5fa" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"/></svg>
+      </div>
+      <div>
+        <p style="font-size:13px;font-weight:800;color:#111827;margin-bottom:4px">Base Sepolia</p>
+        <p style="font-size:11px;color:#4b5563;line-height:1.6">ZonePactRegistry.sol stores 426 petitions immutably. On-chain proof replacing $5-8k title reports.</p>
+      </div>
+      <div style="margin-top:auto">
+        <p style="font-size:10px;color:#1d4ed8;font-family:monospace">chain 84532</p>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">
+          <span class="pill pill-blue">Solidity 0.8.20</span>
+          <span class="pill pill-blue">BaseScan</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-purple" style="display:flex;flex-direction:column;gap:12px">
+      <div style="width:42px;height:42px;border-radius:12px;background:rgba(167,139,250,.15);border:1px solid rgba(167,139,250,.25);display:flex;align-items:center;justify-content:center">
+        <svg width="20" height="20" fill="none" stroke="#a78bfa" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+      </div>
+      <div>
+        <p style="font-size:13px;font-weight:800;color:#111827;margin-bottom:4px">x402 Protocol</p>
+        <p style="font-size:11px;color:#4b5563;line-height:1.6">HTTP 402 micropayment gate. 0.001 ETH per AI query. Raw window.ethereum — agents pay autonomously.</p>
+      </div>
+      <div style="margin-top:auto">
+        <p style="font-size:10px;color:#6d28d9;font-family:monospace">0.001 ETH · Base Sepolia</p>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">
+          <span class="pill pill-purple">MetaMask</span>
+          <span class="pill pill-purple">Coinbase Wallet</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-green" style="display:flex;flex-direction:column;gap:12px">
+      <div style="width:42px;height:42px;border-radius:12px;background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.25);display:flex;align-items:center;justify-content:center">
+        <svg width="20" height="20" fill="none" stroke="#34d399" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c-.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z"/></svg>
+      </div>
+      <div>
+        <p style="font-size:13px;font-weight:800;color:#111827;margin-bottom:4px">Supabase + Mapbox</p>
+        <p style="font-size:11px;color:#4b5563;line-height:1.6">434k Wake County parcel polygons. Vector tilesets for real-time map rendering at county scale.</p>
+      </div>
+      <div style="margin-top:auto">
+        <p style="font-size:10px;color:#047857;font-family:monospace">PostgreSQL · PostGIS</p>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">
+          <span class="pill pill-green">Supabase</span>
+          <span class="pill pill-green">Mapbox GL JS</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Backend note -->
+  <div style="margin-top:18px;padding:12px 20px;border-radius:10px;background:rgba(0,0,0,.03);border:1px solid rgba(0,0,0,.07);display:flex;align-items:center;gap:20px">
+    <span style="font-size:11px;color:#6b7280;font-weight:600;white-space:nowrap">Backend:</span>
+    <span class="pill pill-white">Python FastAPI</span>
+    <span class="pill pill-white">uvicorn</span>
+    <span class="pill pill-white">web3.py</span>
+    <span class="pill pill-white">boto3</span>
+    <span class="pill pill-white">supabase-py</span>
+    <span style="font-size:11px;color:#6b7280;font-weight:600;margin-left:8px;white-space:nowrap">Frontend:</span>
+    <span class="pill pill-white">React 18</span>
+    <span class="pill pill-white">Vite</span>
+    <span class="pill pill-white">Tailwind CSS</span>
+    <span class="pill pill-white">Mapbox GL JS</span>
+  </div>
+
+  <div class="bottom-bar"></div>
+  <div class="slide-num">7 / 10</div>
+  <div class="watermark"><svg width="14" height="16" viewBox="0 0 160 192" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="wg6" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f97316"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient></defs><polygon points="80,16 132,46 132,106 80,136 28,106 28,46" fill="none" stroke="url(#wg6)" stroke-width="8"/><path fill-rule="evenodd" fill="url(#wg6)" d="M80,48 A20,20 0 0,1 98,76 L80,118 L62,76 A20,20 0 0,1 80,48 Z M80,60 A8,8 0 1,0 80,76 A8,8 0 1,0 80,60 Z"/></svg>ZonePact Intelligence</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 8: AWS -->
+<div class="slide" style="padding:56px 72px">
+  <div class="blob blob-orange" style="width:400px;height:400px;top:-200px;left:-100px;opacity:.1"></div>
+
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+    <div style="padding:3px 10px;border-radius:99px;background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.25)">
+      <span style="font-size:10px;color:#f97316;font-weight:700;letter-spacing:.1em;text-transform:uppercase">AWS Integration</span>
+    </div>
+  </div>
+  <h2 class="slide-title" style="margin-bottom:6px">Three AWS services.<br><span class="grad-text">One query pipeline.</span></h2>
+  <div class="divider"></div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-top:8px">
+
+    <!-- Bedrock -->
+    <div style="background:rgba(249,115,22,.05);border:1px solid rgba(249,115,22,.2);border-radius:18px;padding:26px;display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(249,115,22,.15);border:1px solid rgba(249,115,22,.25);display:flex;align-items:center;justify-content:center">
+          <svg width="20" height="20" fill="none" stroke="#f97316" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
+        </div>
+        <span style="font-size:10px;font-weight:600;padding:3px 8px;border-radius:99px;background:rgba(249,115,22,.12);color:#f97316;border:1px solid rgba(249,115,22,.2)">AI Inference</span>
+      </div>
+      <div>
+        <p style="font-size:15px;font-weight:800;color:#111827;margin-bottom:6px">Amazon Bedrock</p>
+        <p style="font-size:12px;color:#4b5563;line-height:1.7">Claude runs on Bedrock in production. Agentic tool-use loop with multi-step reasoning across parcel data and blockchain.</p>
+      </div>
+      <div style="padding:10px 12px;border-radius:10px;background:rgba(0,0,0,.05);border:1px solid rgba(249,115,22,.15)">
+        <p style="font-size:10px;color:#f97316;font-family:monospace">anthropic.claude-opus-4-5</p>
+        <p style="font-size:10px;color:#6b7280;margin-top:2px">Fallback: Anthropic direct API (local dev)</p>
+      </div>
+    </div>
+
+    <!-- S3 -->
+    <div style="background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.2);border-radius:18px;padding:26px;display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.25);display:flex;align-items:center;justify-content:center">
+          <svg width="20" height="20" fill="none" stroke="#f59e0b" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 5.625c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"/></svg>
+        </div>
+        <span style="font-size:10px;font-weight:600;padding:3px 8px;border-radius:99px;background:rgba(245,158,11,.12);color:#b45309;border:1px solid rgba(245,158,11,.2)">Report Storage</span>
+      </div>
+      <div>
+        <p style="font-size:15px;font-weight:800;color:#111827;margin-bottom:6px">Amazon S3</p>
+        <p style="font-size:12px;color:#4b5563;line-height:1.7">Every verified parcel lookup uploads a structured JSON report (owner + zoning + blockchain proof) to S3 with a 7-day presigned URL.</p>
+      </div>
+      <div style="padding:10px 12px;border-radius:10px;background:rgba(0,0,0,.05);border:1px solid rgba(245,158,11,.15)">
+        <p style="font-size:10px;color:#b45309;font-family:monospace">zonepact-reports/{county}/{petition}.json</p>
+        <p style="font-size:10px;color:#6b7280;margin-top:2px">Centrifuge attaches this to their loan NFT metadata</p>
+      </div>
+    </div>
+
+    <!-- SNS -->
+    <div style="background:rgba(167,139,250,.05);border:1px solid rgba(167,139,250,.2);border-radius:18px;padding:26px;display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(167,139,250,.15);border:1px solid rgba(167,139,250,.25);display:flex;align-items:center;justify-content:center">
+          <svg width="20" height="20" fill="none" stroke="#a78bfa" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+        </div>
+        <span style="font-size:10px;font-weight:600;padding:3px 8px;border-radius:99px;background:rgba(167,139,250,.12);color:#6d28d9;border:1px solid rgba(167,139,250,.2)">Parcel Alerts</span>
+      </div>
+      <div>
+        <p style="font-size:15px;font-weight:800;color:#111827;margin-bottom:6px">Amazon SNS</p>
+        <p style="font-size:12px;color:#4b5563;line-height:1.7">Lenders subscribe to per-PIN alerts. When a rezoning petition is filed, SNS fires targeted emails to Aave's liquidation bot within minutes.</p>
+      </div>
+      <div style="padding:10px 12px;border-radius:10px;background:rgba(0,0,0,.05);border:1px solid rgba(167,139,250,.15)">
+        <p style="font-size:10px;color:#6d28d9;font-family:monospace">FilterPolicy: {"pin": ["1705485362"]}</p>
+        <p style="font-size:10px;color:#6b7280;margin-top:2px">POST /api/watch — subscribe any PIN</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Check endpoint -->
+  <div style="margin-top:18px;padding:12px 20px;border-radius:10px;background:rgba(0,0,0,.03);border:1px solid rgba(0,0,0,.07);display:flex;align-items:center;gap:16px">
+    <span style="font-size:11px;color:#6b7280;font-weight:600">Live status endpoint:</span>
+    <code style="font-size:12px;color:#047857;background:rgba(16,185,129,.08);padding:4px 10px;border-radius:6px;border:1px solid rgba(16,185,129,.15)">GET /api/aws-status</code>
+    <span style="font-size:11px;color:#6b7280">→ returns configured + active flags for each service. All three services are wired — activate with AWS credentials.</span>
+  </div>
+
+  <div class="bottom-bar"></div>
+  <div class="slide-num">8 / 10</div>
+  <div class="watermark"><svg width="14" height="16" viewBox="0 0 160 192" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="wg7" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f97316"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient></defs><polygon points="80,16 132,46 132,106 80,136 28,106 28,46" fill="none" stroke="url(#wg7)" stroke-width="8"/><path fill-rule="evenodd" fill="url(#wg7)" d="M80,48 A20,20 0 0,1 98,76 L80,118 L62,76 A20,20 0 0,1 80,48 Z M80,60 A8,8 0 1,0 80,76 A8,8 0 1,0 80,60 Z"/></svg>ZonePact Intelligence</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 9: CONTRACT -->
+<div class="slide" style="padding:56px 72px">
+  <div class="blob blob-blue" style="width:350px;height:350px;bottom:-150px;right:-80px;opacity:.12"></div>
+
+  <p class="overline" style="color:#047857;margin-bottom:10px">On-Chain Proof</p>
+  <h2 class="slide-title" style="margin-bottom:6px"><span class="grad-text">ZonePactRegistry</span><br>426 petitions. Immutable.</h2>
+  <div class="divider"></div>
+
+  <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:28px;margin-top:8px">
+    <div>
+      <!-- Contract address -->
+      <div style="padding:18px 20px;border-radius:14px;background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.2);margin-bottom:16px">
+        <p style="font-size:10px;color:#047857;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Contract Address · Base Sepolia (84532)</p>
+        <p style="font-size:13px;font-family:monospace;color:#374151;word-break:break-all;line-height:1.5">0x82b5Bb6A1F76484C28b87d59c984656DA9aD04Bc</p>
+      </div>
+
+      <!-- Functions -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:10px;background:rgba(0,0,0,.03);border:1px solid rgba(0,0,0,.07)">
+          <code style="font-size:11px;color:#6d28d9;white-space:nowrap;font-family:monospace;padding:2px 6px;background:rgba(167,139,250,.08);border-radius:4px">getPetition(id)</code>
+          <p style="font-size:11px;color:#4b5563;line-height:1.5">Full zoning record — present zoning, proposed, vote result, timestamp, petitioner</p>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:10px;background:rgba(0,0,0,.03);border:1px solid rgba(0,0,0,.07)">
+          <code style="font-size:11px;color:#6d28d9;white-space:nowrap;font-family:monospace;padding:2px 6px;background:rgba(167,139,250,.08);border-radius:4px">getFullHistory(pin)</code>
+          <p style="font-size:11px;color:#4b5563;line-height:1.5">All petitions ever filed for a parcel PIN — complete zoning lifecycle on-chain</p>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:10px;background:rgba(0,0,0,.03);border:1px solid rgba(0,0,0,.07)">
+          <code style="font-size:11px;color:#6d28d9;white-space:nowrap;font-family:monospace;padding:2px 6px;background:rgba(167,139,250,.08);border-radius:4px">totalPetitions()</code>
+          <p style="font-size:11px;color:#4b5563;line-height:1.5">Currently 426 — every Wake County rezoning case since 2019 recorded on-chain</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="padding:20px;border-radius:16px;background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.2);text-align:center">
+        <div style="font-size:52px;font-weight:900;background:linear-gradient(135deg,#10b981,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1">426</div>
+        <p style="font-size:12px;color:#6b7280;margin-top:6px">Petitions recorded on-chain</p>
+        <p style="font-size:10px;color:#047857;margin-top:3px">Wake County NC · 2019–2024</p>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="padding:14px;border-radius:12px;background:rgba(0,0,0,.04);border:1px solid rgba(0,0,0,.07);text-align:center">
+          <div style="font-size:28px;font-weight:900;color:#1d4ed8">84532</div>
+          <p style="font-size:10px;color:#6b7280;margin-top:3px">Base Sepolia chain ID</p>
+        </div>
+        <div style="padding:14px;border-radius:12px;background:rgba(0,0,0,.04);border:1px solid rgba(0,0,0,.07);text-align:center">
+          <div style="font-size:28px;font-weight:900;color:#6d28d9">2</div>
+          <p style="font-size:10px;color:#6b7280;margin-top:3px">Contracts deployed</p>
+        </div>
+      </div>
+      <div style="padding:14px 16px;border-radius:12px;background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.18);display:flex;align-items:center;gap:10px">
+        <svg width="16" height="16" fill="none" stroke="#60a5fa" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"/></svg>
+        <div>
+          <p style="font-size:11px;font-weight:600;color:#111827">View on BaseScan</p>
+          <p style="font-size:10px;color:#6b7280">sepolia.basescan.org</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar"></div>
+  <div class="slide-num">9 / 10</div>
+  <div class="watermark"><svg width="14" height="16" viewBox="0 0 160 192" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="wg8" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f97316"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient></defs><polygon points="80,16 132,46 132,106 80,136 28,106 28,46" fill="none" stroke="url(#wg8)" stroke-width="8"/><path fill-rule="evenodd" fill="url(#wg8)" d="M80,48 A20,20 0 0,1 98,76 L80,118 L62,76 A20,20 0 0,1 80,48 Z M80,60 A8,8 0 1,0 80,76 A8,8 0 1,0 80,60 Z"/></svg>ZonePact Intelligence</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 10: CTA -->
+<div class="slide" style="justify-content:center;align-items:center">
+  <div class="blob blob-orange" style="width:600px;height:600px;top:-250px;right:-200px;opacity:.12"></div>
+  <div class="blob blob-blue" style="width:500px;height:500px;bottom:-250px;left:-150px;opacity:.12"></div>
+
+  <div style="text-align:center;position:relative;z-index:1;max-width:1000px;padding:0 72px">
+    <div style="display:flex;justify-content:center;margin-bottom:24px">
+      <svg width="56" height="67" viewBox="0 0 160 192" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="g10" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#f97316"/><stop offset="100%" stop-color="#3b82f6"/>
+          </linearGradient>
+          <linearGradient id="g10bg" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#f97316" stop-opacity=".12"/><stop offset="100%" stop-color="#3b82f6" stop-opacity=".12"/>
+          </linearGradient>
+        </defs>
+        <polygon points="80,16 132,46 132,106 80,136 28,106 28,46" fill="url(#g10bg)" stroke="url(#g10)" stroke-width="2.5"/>
+        <path fill-rule="evenodd" fill="url(#g10)" d="M80,48 A20,20 0 0,1 98,76 L80,118 L62,76 A20,20 0 0,1 80,48 Z M80,60 A8,8 0 1,0 80,76 A8,8 0 1,0 80,60 Z"/>
+      </svg>
+    </div>
+
+    <h1 style="font-size:58px;font-weight:900;line-height:1.05;letter-spacing:-.04em;margin-bottom:16px">
+      The land record layer<br>
+      <span class="grad-text">DeFi has been waiting for.</span>
+    </h1>
+    <p style="font-size:16px;color:#4b5563;max-width:600px;margin:0 auto 40px;line-height:1.7">
+      Centrifuge and Aave are underwriting real-world assets today. ZonePact gives them cryptographic proof of zoning status for $0.001 — powered by Claude, Base, and AWS.
+    </p>
+
+    <!-- Hackathon requirements checklist -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:720px;margin:0 auto 36px;text-align:left">
+      <div style="padding:12px 16px;border-radius:12px;background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.18);display:flex;align-items:center;gap:10px">
+        <span style="color:#047857;font-size:14px">✓</span>
+        <div><p style="font-size:12px;font-weight:700;color:#111827">Coinbase Base Sepolia</p><p style="font-size:10px;color:#6b7280">ZonePactRegistry · 426 petitions on-chain</p></div>
+      </div>
+      <div style="padding:12px 16px;border-radius:12px;background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.18);display:flex;align-items:center;gap:10px">
+        <span style="color:#047857;font-size:14px">✓</span>
+        <div><p style="font-size:12px;font-weight:700;color:#111827">x402 Protocol</p><p style="font-size:10px;color:#6b7280">HTTP 402 · 0.001 ETH per AI query</p></div>
+      </div>
+      <div style="padding:12px 16px;border-radius:12px;background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.18);display:flex;align-items:center;gap:10px">
+        <span style="color:#047857;font-size:14px">✓</span>
+        <div><p style="font-size:12px;font-weight:700;color:#111827">Amazon Bedrock</p><p style="font-size:10px;color:#6b7280">Claude agent · anthropic.claude-opus-4-5</p></div>
+      </div>
+      <div style="padding:12px 16px;border-radius:12px;background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.18);display:flex;align-items:center;gap:10px">
+        <span style="color:#047857;font-size:14px">✓</span>
+        <div><p style="font-size:12px;font-weight:700;color:#111827">Amazon S3 + SNS</p><p style="font-size:10px;color:#6b7280">Verified reports · per-PIN parcel alerts</p></div>
+      </div>
+    </div>
+
+    <!-- GitHub -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px">
+      <a style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:99px;background:rgba(0,0,0,.05);border:1px solid rgba(0,0,0,.1);font-size:12px;color:#374151;text-decoration:none">
+        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        github.com/jonumhills/zonepact
+      </a>
+      <span style="font-size:12px;color:#374151">·</span>
+      <span style="font-size:12px;color:#6b7280">Coinbase × AWS Agentic Hackathon 2025</span>
+    </div>
+  </div>
+
+  <div class="bottom-bar"></div>
+  <div class="slide-num">10 / 10</div>
+</div>
+
+</body>
+</html>

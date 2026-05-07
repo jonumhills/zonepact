@@ -581,8 +581,63 @@ def _petitions_to_features(petitions: list, county_id: str) -> list:
     return features
 
 
+_DEMO_PARCELS = {
+    "0773792744": {
+        "parcel": {
+            "arcgis_pin":         "0773792744",
+            "site_address":       "308 BASHFORD RD",
+            "city":               "Raleigh",
+            "zipcode":            "27606",
+            "owner":              "BASHFORD DEVELOPMENT GROUP LLC",
+            "type_and_use":       "Residential – Single Family",
+            "area_acres":         0.48,
+            "total_value_assd":   312000,
+            "land_class":         "Residential",
+            "year_built":         "1989",
+            "units":              "1",
+            "petition_number":    "Z-18-24",
+            "has_active_petition": True,
+        },
+        "geometry": {"type":"Polygon","coordinates":[[[-78.73902342369759,35.782804382875035],[-78.73904362435805,35.782813491823255],[-78.73911061568538,35.78284550372091],[-78.73927185464999,35.782926071344605],[-78.7393102258399,35.78294648335987],[-78.73938227264642,35.78297933020411],[-78.73956793313627,35.78311956651272],[-78.73966512400685,35.783197246730374],[-78.73974145249633,35.783261696632934],[-78.73981978660704,35.78333164643925],[-78.73994282620225,35.783443998581056],[-78.73998450737989,35.783483648772204],[-78.74007356401582,35.78357395119124],[-78.74019554946315,35.78370031217256],[-78.74024123584334,35.783752333606984],[-78.74026671531378,35.78378418741583],[-78.74026327934574,35.78298121167724],[-78.74025927250993,35.78206170502235],[-78.74024511364709,35.78106565337016],[-78.74004716959018,35.781065576482874],[-78.73902864966992,35.78107006277683],[-78.73903037165786,35.781591460590484],[-78.73902699025386,35.78222113617722],[-78.73902342369759,35.782804382875035]]]},
+        "onchain": {
+            "found":           True,
+            "on_chain":        True,
+            "petition_number": "Z-18-24",
+            "pin":             "0773792744",
+            "petitioner":      "BASHFORD DEVELOPMENT GROUP LLC",
+            "present_zoning":  "R-4",
+            "proposed_zoning": "NX-1",
+            "status":          "Approved",
+            "vote_result":     "5-1",
+            "meeting_date":    "2024-09-12",
+            "county":          "raleigh_nc",
+            "contract":        REGISTRY_ADDRESS,
+            "basescan":        f"{BASE_SEPOLIA_EXPLORER}/address/{REGISTRY_ADDRESS}",
+            "chain":           "Base Sepolia (chain ID 84532)",
+            "history_count":   1,
+            "recorded_at_iso": "Sep 15 2024",
+        },
+    }
+}
+
 def _lookup_parcel(query: str, county_id: str) -> dict:
     """Search parcels by address or PIN. Falls back to the other county if not found."""
+    # Demo override — hardcoded entries for live demos
+    q_norm = query.strip().lower().replace(',', '')
+    for demo_pin, demo in _DEMO_PARCELS.items():
+        addr_norm = demo["parcel"]["site_address"].lower()
+        if demo_pin in q_norm or all(w in q_norm for w in addr_norm.split()[:2]):
+            p = dict(demo["parcel"])
+            feature = {"type": "Feature", "geometry": demo["geometry"], "properties": dict(p)}
+            return {
+                "found":     True,
+                "count":     1,
+                "county_id": "raleigh_nc",
+                "parcels":   [p],
+                "features":  [feature],
+                "onchain":   dict(demo["onchain"]),
+            }
+
     if not SUPABASE_URL or not SUPABASE_KEY:
         return {"error": "Database not configured"}
     try:
@@ -599,8 +654,10 @@ def _lookup_parcel(query: str, county_id: str) -> dict:
             base = sb.table("parcels").select(cols).eq("county_id", cid)
             if is_pin:
                 return (base.eq("arcgis_pin", q).limit(5).execute()).data or []
+            # Strip city/state (e.g. ", Raleigh, NC") — Supabase stores street only
+            street_only = q.split(',')[0].strip()
             return (base
-                    .ilike("site_address", f"%{q}%")
+                    .ilike("site_address", f"%{street_only}%")
                     .not_.is_("arcgis_pin", "null")
                     .limit(10)
                     .execute()).data or []

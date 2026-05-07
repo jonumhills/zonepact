@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { motion, AnimatePresence } from 'framer-motion'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import ChatInterface from '../components/ChatInterface'
@@ -34,80 +35,89 @@ const COUNTIES = {
 
 // ── Parcel info card (floats over map) ────────────────────────────────────────
 
-function ParcelCard({ parcel, onClose }) {
+function ParcelCard({ parcel, cardPos, onClose }) {
   if (!parcel) return null
 
-  const isRaleigh = parcel._county === 'raleigh_nc' || !!parcel.pin
-  const id        = parcel.rpc || parcel.RPC || parcel.pin || parcel.parcel_id || '—'
-  const addr      = parcel.site_address || parcel.address || parcel.location || ''
-  const zone      = parcel.current_zoning || parcel.present_zoning || ''
-  const prop      = parcel.proposed_zoning || ''
-  const area      = parcel.area_sqft ? `${Number(parcel.area_sqft).toLocaleString()} sq ft` : null
-  const owner     = parcel.owner || ''
-  const landUse   = parcel.type_and_use || ''
-  const parcelId  = parcel.parcel_id && parcel.parcel_id !== id ? parcel.parcel_id : null
-
-  const petition  = parcel.petition_number ? parcel : null
-
+  const isRaleigh   = parcel._county === 'raleigh_nc' || !!parcel.pin
+  const isPetition  = !!parcel.petition_number
+  const id          = parcel.rpc || parcel.RPC || parcel.pin || parcel.parcel_id || '—'
+  const addr        = parcel.site_address || parcel.address || parcel.location || ''
+  const zone        = parcel.current_zoning || parcel.present_zoning || ''
+  const prop        = parcel.proposed_zoning || ''
+  const area        = parcel.area_sqft ? `${Number(parcel.area_sqft).toLocaleString()} sq ft` : null
+  const owner       = parcel.owner || ''
+  const landUse     = parcel.type_and_use || ''
+  const parcelId    = parcel.parcel_id && parcel.parcel_id !== id ? parcel.parcel_id : null
   const zoneDisplay = zone && prop ? `${zone} → ${prop}` : zone
 
+  const left = Math.min(cardPos.x + 14, window.innerWidth  - 316)
+  const top  = Math.min(cardPos.y + 14, window.innerHeight - 320)
+
   return (
-    <div
-      className="absolute bottom-6 right-4 z-30 rounded-xl overflow-hidden pointer-events-auto flex flex-col"
-      style={{ width: 300, maxHeight: '60vh', background: 'rgba(13,17,23,0.97)', border: '1px solid rgba(48,54,61,0.8)', boxShadow: '0 8px 32px rgba(0,0,0,0.6)', backdropFilter: 'blur(16px)' }}
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.15 }}
+      className="absolute z-30 rounded-xl overflow-hidden pointer-events-auto flex flex-col"
+      style={{
+        left, top, width: 288, maxHeight: '60vh',
+        background:    'rgba(13,17,23,0.97)',
+        border:        isPetition ? '1px solid rgba(245,158,11,0.35)' : '1px solid rgba(48,54,61,0.8)',
+        boxShadow:     '0 8px 32px rgba(0,0,0,0.6)',
+        backdropFilter:'blur(16px)',
+      }}
     >
       {/* Header */}
       <div className="flex items-start justify-between px-4 py-3 border-b border-white/8 flex-shrink-0">
         <div>
-          <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-0.5">
-            {isRaleigh ? 'Wake County Parcel' : 'Arlington Parcel'}
+          <p className="text-[10px] uppercase tracking-wider mb-0.5"
+            style={{ color: isPetition ? '#f59e0b' : '#6b7280' }}>
+            {isPetition ? 'Rezoning Petition' : isRaleigh ? 'Wake County Parcel' : 'Arlington Parcel'}
           </p>
           <p className="text-sm font-mono font-bold text-white">{id}</p>
           {parcelId && <p className="text-[10px] text-gray-600 font-mono mt-0.5">ID: {parcelId}</p>}
-          {petition && (
-            <span
-              className="inline-block mt-1 text-[10px] font-medium px-2 py-0.5 rounded-full"
-              style={{ background: 'rgba(245,158,11,0.12)', color: '#f59e0b', border: '1px solid rgba(245,158,11,0.25)' }}
-            >
-              {petition.status ?? 'Petition on file'}
+          {isPetition && (
+            <span className="inline-block mt-1 text-[10px] font-medium px-2 py-0.5 rounded-full"
+              style={{ background: 'rgba(245,158,11,0.12)', color: '#f59e0b', border: '1px solid rgba(245,158,11,0.25)' }}>
+              {parcel.status ?? 'Petition on file'}
             </span>
           )}
         </div>
-        <button onClick={onClose} className="text-gray-600 hover:text-gray-300 text-xl leading-none w-6 h-6 flex items-center justify-center transition-colors flex-shrink-0">×</button>
+        <button onClick={onClose}
+          className="text-gray-600 hover:text-gray-300 text-xl leading-none w-6 h-6 flex items-center justify-center transition-colors flex-shrink-0">×</button>
       </div>
 
       {/* Scrollable body */}
       <div className="overflow-y-auto px-4 py-3 space-y-2">
-        {/* Parcel fields */}
-        {addr     && <Row label={isRaleigh ? 'PIN' : 'RPC'} value={id} mono />}
-        {addr     && <Row label="Address"  value={addr} />}
-        {zone     && <Row label="Zoning"   value={zoneDisplay} highlight={!!prop} />}
-        {area     && <Row label="Area"     value={area} />}
-        {owner    && <Row label="Owner"    value={owner} />}
-        {landUse  && <Row label="Land use" value={landUse} />}
+        {addr    && <Row label={isRaleigh ? 'PIN' : 'RPC'} value={id} mono />}
+        {addr    && <Row label="Address"  value={addr} />}
+        {zone    && <Row label="Zoning"   value={zoneDisplay} highlight={!!prop} />}
+        {area    && <Row label="Area"     value={area} />}
+        {owner   && <Row label="Owner"    value={owner} />}
+        {landUse && <Row label="Land use" value={landUse} />}
 
-        {/* Petition section */}
-        {petition ? (
+        {isPetition ? (
           <div className="pt-2 mt-1 border-t border-white/6 space-y-2">
-            <p className="text-[9px] text-amber-500 uppercase tracking-wider font-medium">Linked Petition</p>
-            <Row label="Case #"     value={petition.petition_number} mono />
-            <Row label="Petitioner" value={petition.petitioner} />
+            <p className="text-[9px] text-amber-500 uppercase tracking-wider font-medium">Petition Details</p>
+            <Row label="Case #"     value={parcel.petition_number} mono />
+            <Row label="Petitioner" value={parcel.petitioner} />
             <Row label="Change"
-              value={(petition.present_zoning || petition.current_zoning) && petition.proposed_zoning
-                ? `${petition.present_zoning || petition.current_zoning} → ${petition.proposed_zoning}`
+              value={(parcel.present_zoning || parcel.current_zoning) && parcel.proposed_zoning
+                ? `${parcel.present_zoning || parcel.current_zoning} → ${parcel.proposed_zoning}`
                 : null}
               highlight
             />
-            <Row label="Meeting" value={petition.meeting_date ? new Date(petition.meeting_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : null} />
-            <Row label="Vote"    value={petition.vote_result} />
-            {petition.cm_recommendation && (
+            <Row label="Meeting" value={parcel.meeting_date ? new Date(parcel.meeting_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : null} />
+            <Row label="Vote"    value={parcel.vote_result} />
+            {parcel.cm_recommendation && (
               <div>
                 <p className="text-[10px] text-gray-600 mb-1">CM Recommendation</p>
-                <p className="text-[10px] text-gray-400 leading-relaxed">{petition.cm_recommendation}</p>
+                <p className="text-[10px] text-gray-400 leading-relaxed">{parcel.cm_recommendation}</p>
               </div>
             )}
-            {petition.agenda_url && (
-              <a href={petition.agenda_url} target="_blank" rel="noreferrer"
+            {parcel.agenda_url && (
+              <a href={parcel.agenda_url} target="_blank" rel="noreferrer"
                 className="inline-block text-[10px] text-blue-400 hover:underline pt-1">
                 View agenda ↗
               </a>
@@ -117,7 +127,7 @@ function ParcelCard({ parcel, onClose }) {
           <p className="text-[10px] text-gray-600 pt-1 border-t border-white/6">No active petition on file</p>
         )}
       </div>
-    </div>
+    </motion.div>
   )
 }
 
@@ -199,7 +209,7 @@ function IntelMap({ aiParcels, focusFeature, county, onCountyReady, onParcelClic
         const fillId = `${sourceId}-fill`
         map.on('click', fillId, (e) => {
           e.originalEvent.stopPropagation()
-          if (e.features?.length) onParcelClick?.(e.features[0].properties, countyId)
+          if (e.features?.length) onParcelClick?.(e.features[0].properties, countyId, e.point)
         })
         map.on('mouseenter', fillId, () => { map.getCanvas().style.cursor = 'pointer' })
         map.on('mouseleave', fillId, () => { map.getCanvas().style.cursor = '' })
@@ -210,7 +220,7 @@ function IntelMap({ aiParcels, focusFeature, county, onCountyReady, onParcelClic
       ;['petition-fill', 'ai-fill'].forEach((layerId) => {
         map.on('click', layerId, (e) => {
           e.originalEvent.stopPropagation()
-          if (e.features?.length) onParcelClick?.(e.features[0].properties, activeCounty.current)
+          if (e.features?.length) onParcelClick?.(e.features[0].properties, activeCounty.current, e.point)
         })
         map.on('mouseenter', layerId, (e) => {
           map.getCanvas().style.cursor = 'pointer'
@@ -376,6 +386,7 @@ export default function IntelPage() {
   const [county,          setCounty]          = useState('raleigh_nc')
   const [parcelCount,     setParcelCount]     = useState(0)
   const [selectedParcel,  setSelectedParcel]  = useState(null)
+  const [cardPos,         setCardPos]         = useState({ x: 0, y: 0 })
 
   const handleParcelsUpdate = useCallback((features) => {
     setAiParcels(features)
@@ -388,6 +399,7 @@ export default function IntelPage() {
     setParcelCount(0)
     setSelectedParcel(null)
     setFocusFeature(null)
+    setCardPos({ x: 0, y: 0 })
   }, [])
 
   const handlePetitionClick = useCallback(async (petitionNumber) => {
@@ -493,11 +505,12 @@ export default function IntelPage() {
             aiParcels={aiParcels}
             focusFeature={focusFeature}
             county={county}
-            onParcelClick={(props, countyId) => {
+            onParcelClick={(props, countyId, point) => {
               if (!props) { setSelectedParcel(null); return }
               const rpc = props.rpc || props.RPC || props.pin || props.parcel_id
               const petition = rpc ? getPetitionByRpcForCounty(rpc, countyId || county) : null
               setSelectedParcel(petition ? { ...props, ...petition, _county: countyId || county } : { ...props, _county: countyId || county })
+              if (point) setCardPos({ x: point.x, y: point.y })
             }}
           />
 
@@ -524,8 +537,16 @@ export default function IntelPage() {
             </div>
           )}
 
-          {/* Parcel detail card */}
-          <ParcelCard parcel={selectedParcel} onClose={() => setSelectedParcel(null)} />
+          {/* Parcel detail card — floats near click position */}
+          <AnimatePresence>
+            {selectedParcel && (
+              <ParcelCard
+                parcel={selectedParcel}
+                cardPos={cardPos}
+                onClose={() => setSelectedParcel(null)}
+              />
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </div>

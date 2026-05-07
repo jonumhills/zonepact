@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ZonePact — Agent Flow</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0a0a0f;
+    --card: #111118;
+    --card2: #18181f;
+    --border: #1e1e2e;
+    --border2: #2a2a3e;
+    --text: #e8e8f0;
+    --muted: #7070a0;
+    --dim: #3a3a5a;
+    --orange: #f97316;
+    --green: #22c55e;
+    --blue: #60a5fa;
+    --purple: #a78bfa;
+    --red: #f87171;
+    --yellow: #fbbf24;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(10,10,15,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    height: 52px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  nav a {
+    color: var(--muted); text-decoration: none;
+    padding: 6px 12px; border-radius: 6px;
+    font-size: 12px; transition: all 0.15s;
+    white-space: nowrap;
+  }
+  nav a:hover { color: var(--text); background: var(--card2); }
+  nav a.active { color: var(--orange); background: rgba(249,115,22,0.1); }
+  .nav-logo {
+    color: var(--orange); font-weight: 700; font-size: 14px;
+    margin-right: 16px; text-decoration: none !important;
+  }
+  .live-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--muted); font-size: 12px; text-decoration: none;
+    padding: 4px 10px; border-radius: 6px;
+    border: 1px solid var(--border2);
+    transition: all 0.15s;
+  }
+  .live-link:hover { color: var(--orange); border-color: rgba(249,115,22,0.4); }
+  .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); flex-shrink: 0; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+  /* ── LAYOUT ── */
+  .page {
+    min-height: 100vh; padding: 80px 32px 60px;
+    max-width: 1000px; margin: 0 auto;
+    display: flex; flex-direction: column; gap: 32px;
+  }
+
+  /* ── HEADINGS ── */
+  .page-label {
+    font-size: 11px; letter-spacing: 0.12em;
+    color: var(--muted); text-transform: uppercase;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .page-label::before {
+    content: ''; width: 20px; height: 1px; background: var(--border2);
+  }
+  h1 { font-size: 36px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; }
+  h2 { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+  h3 { font-size: 15px; font-weight: 600; }
+  .accent  { color: var(--orange); }
+  .green   { color: var(--green); }
+  .blue    { color: var(--blue); }
+  .purple  { color: var(--purple); }
+  .red     { color: var(--red); }
+  .yellow  { color: var(--yellow); }
+  .muted   { color: var(--muted); }
+
+  /* ── CARDS ── */
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+  .card-sm { padding: 16px 20px; }
+  .card-grid { display: grid; gap: 16px; }
+  .card-grid-2 { grid-template-columns: 1fr 1fr; }
+  .card-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+  /* ── FLOW ── */
+  .flow { display: flex; flex-direction: column; gap: 0; }
+  .flow-step { display: flex; gap: 16px; position: relative; }
+  .flow-step:not(:last-child)::after {
+    content: ''; position: absolute;
+    left: 15px; top: 36px; bottom: 0;
+    width: 1px; background: var(--border2);
+  }
+  .flow-dot {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    flex-shrink: 0; margin-top: 4px; z-index: 1; border: 1px solid;
+  }
+  .flow-dot.orange { background: rgba(249,115,22,0.15); border-color: rgba(249,115,22,0.4); color: var(--orange); }
+  .flow-dot.green  { background: rgba(34,197,94,0.12);  border-color: rgba(34,197,94,0.35);  color: var(--green); }
+  .flow-dot.blue   { background: rgba(96,165,250,0.12); border-color: rgba(96,165,250,0.35); color: var(--blue); }
+  .flow-dot.purple { background: rgba(167,139,250,0.12);border-color: rgba(167,139,250,0.35);color: var(--purple); }
+  .flow-dot.red    { background: rgba(248,113,113,0.12);border-color: rgba(248,113,113,0.35);color: var(--red); }
+  .flow-dot.yellow { background: rgba(251,191,36,0.12); border-color: rgba(251,191,36,0.35); color: var(--yellow); }
+  .flow-body { padding: 4px 0 28px; }
+  .flow-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .flow-desc  { color: var(--muted); font-size: 13px; line-height: 1.55; }
+
+  /* ── CODE ── */
+  code {
+    background: var(--card2); border: 1px solid var(--border);
+    padding: 2px 6px; border-radius: 4px;
+    font-size: 12px; color: var(--orange);
+  }
+  pre {
+    background: var(--card2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px 20px;
+    font-size: 12px; overflow-x: auto; line-height: 1.7; color: var(--text);
+  }
+  pre .k  { color: var(--purple); }
+  pre .s  { color: var(--green); }
+  pre .c  { color: var(--muted); }
+  pre .fn { color: var(--blue); }
+  pre .n  { color: var(--orange); }
+  pre .kw { color: var(--yellow); }
+
+  /* ── TAG ── */
+  .tag {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.04em; border: 1px solid;
+  }
+  .tag-orange { background: rgba(249,115,22,0.1);  border-color: rgba(249,115,22,0.35);  color: var(--orange); }
+  .tag-green  { background: rgba(34,197,94,0.1);   border-color: rgba(34,197,94,0.3);    color: var(--green); }
+  .tag-blue   { background: rgba(96,165,250,0.1);  border-color: rgba(96,165,250,0.3);   color: var(--blue); }
+  .tag-purple { background: rgba(167,139,250,0.1); border-color: rgba(167,139,250,0.3);  color: var(--purple); }
+  .tag-yellow { background: rgba(251,191,36,0.1);  border-color: rgba(251,191,36,0.3);   color: var(--yellow); }
+
+  /* ── TABLE ── */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    text-align: left; padding: 10px 14px; color: var(--muted);
+    font-weight: 500; font-size: 11px; letter-spacing: 0.06em;
+    text-transform: uppercase; border-bottom: 1px solid var(--border);
+  }
+  td { padding: 11px 14px; border-bottom: 1px solid var(--border); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--card2); }
+
+  /* ── SECTION SEP ── */
+  .section-sep {
+    display: flex; align-items: center; gap: 12px;
+    color: var(--dim); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+    margin: 4px 0;
+  }
+  .section-sep::before, .section-sep::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* ── CONTRACT ROW ── */
+  .contract-row {
+    display: flex; align-items: flex-start;
+    gap: 16px; padding: 18px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .contract-row:last-child { border-bottom: none; }
+  .contract-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+    border: 1px solid var(--border2); background: var(--card2);
+  }
+  .contract-name { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+  .contract-addr { font-size: 11px; color: var(--muted); font-family: monospace; margin-bottom: 6px; word-break: break-all; }
+  .contract-desc { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+  .fn-list { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  /* ── ARCH ARROW ── */
+  .arch {
+    display: flex; align-items: center; gap: 0;
+    background: var(--card2); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden;
+  }
+  .arch-node {
+    flex: 1; padding: 14px 12px; text-align: center;
+    border-right: 1px solid var(--border);
+    font-size: 11px;
+  }
+  .arch-node:last-child { border-right: none; }
+  .arch-arrow {
+    width: 24px; text-align: center; color: var(--dim);
+    font-size: 14px; flex-shrink: 0;
+  }
+  .arch-node-label { font-size: 10px; color: var(--muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.08em; }
+  .arch-node-val { font-weight: 700; font-size: 13px; }
+
+  @media (max-width: 640px) {
+    .card-grid-2, .card-grid-3 { grid-template-columns: 1fr; }
+    h1 { font-size: 26px; }
+    nav { padding: 0 16px; gap: 2px; }
+    nav a { padding: 5px 8px; font-size: 11px; }
+    .page { padding: 72px 16px 48px; }
+    .arch { flex-direction: column; }
+    .arch-node { border-right: none; border-bottom: 1px solid var(--border); }
+    .arch-node:last-child { border-bottom: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══════════════════════════════════════════════════════════ -->
+<nav>
+  <a class="nav-logo" href="#home">ZonePact</a>
+  <a href="#overview">Overview</a>
+  <a href="#pipeline">Pipeline Agent</a>
+  <a href="#intelligence">Intelligence Agent</a>
+  <a href="#contracts">Contracts</a>
+  <div style="margin-left:auto; display:flex; align-items:center; gap:8px;">
+    <a class="live-link" href="http://localhost:5174" target="_blank">
+      <span class="live-dot"></span> Live Demo
+    </a>
+  </div>
+</nav>
+
+
+<!-- ══ HOME ═════════════════════════════════════════════════════════ -->
+<section id="home">
+<div class="page" style="justify-content:center; min-height:100vh;">
+
+  <div class="page-label">Coinbase × AWS Agentic Hackathon 2025</div>
+
+  <div>
+    <h1>Zone<span class="accent">Pact</span></h1>
+    <h1 style="color:var(--muted); font-weight:400;">Blockchain-verified land records for DeFi</h1>
+  </div>
+
+  <p style="color:var(--muted); max-width:560px; font-size:14px; line-height:1.75;">
+    Two AI agents working in tandem. The first crawls county legislative offices,
+    extracts rezoning petitions, and writes them immutably to Base Sepolia.
+    The second lets DeFi lenders query any parcel by address or PIN —
+    verified on-chain — for $0.001 instead of $5–8k to a consultant.
+  </p>
+
+  <div class="card-grid card-grid-3">
+    <div class="card card-sm">
+      <div style="font-size:11px; color:var(--muted); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.08em;">Petitions On-Chain</div>
+      <div style="font-size:28px; font-weight:700; color:var(--orange);">426</div>
+      <div style="font-size:12px; color:var(--muted);">Wake County NC · Base Sepolia</div>
+    </div>
+    <div class="card card-sm">
+      <div style="font-size:11px; color:var(--muted); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.08em;">Parcels Indexed</div>
+      <div style="font-size:28px; font-weight:700; color:var(--blue);">434k</div>
+      <div style="font-size:12px; color:var(--muted);">Supabase + Mapbox tilesets</div>
+    </div>
+    <div class="card card-sm">
+      <div style="font-size:11px; color:var(--muted); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.08em;">Cost Per Query</div>
+      <div style="font-size:28px; font-weight:700; color:var(--green);">$0.001</div>
+      <div style="font-size:12px; color:var(--muted);">vs $5–8k title consultant</div>
+    </div>
+  </div>
+
+  <!-- Architecture overview bar -->
+  <div class="arch">
+    <div class="arch-node">
+      <div class="arch-node-label">Source</div>
+      <div class="arch-node-val" style="color:var(--muted);">County<br>Legislative<br>Office</div>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-node">
+      <div class="arch-node-label">Pipeline Agent</div>
+      <div class="arch-node-val accent">AWS Bedrock<br>Claude</div>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-node">
+      <div class="arch-node-label">On-Chain Registry</div>
+      <div class="arch-node-val" style="color:var(--blue);">Base Sepolia<br>ZonePactRegistry</div>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-node">
+      <div class="arch-node-label">Intelligence Agent</div>
+      <div class="arch-node-val accent">AWS Bedrock<br>Claude</div>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-node">
+      <div class="arch-node-label">DeFi Lender</div>
+      <div class="arch-node-val" style="color:var(--green);">Centrifuge<br>Aave</div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+
+<!-- ══ OVERVIEW ══════════════════════════════════════════════════════ -->
+<section id="overview">
+<div class="page">
+
+  <div class="page-label">System Design</div>
+  <h2>Two Agents. One Pipeline.</h2>
+
+  <div class="card-grid card-grid-2">
+    <div class="card" style="border-color:rgba(249,115,22,0.25); background:rgba(249,115,22,0.04);">
+      <div style="font-size:10px; color:var(--orange); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:10px;">Agent 1 — Pipeline</div>
+      <h3 style="margin-bottom:10px;">Crawl → Extract → Write On-Chain</h3>
+      <p style="color:var(--muted); font-size:13px; line-height:1.7;">
+        Monitors Wake County's legislative portal for new rezoning filings.
+        Parses each petition — petition number, PIN, zoning change, vote result.
+        Writes every record immutably to <code>ZonePactRegistry</code> on Base Sepolia.
+        Fires an SNS alert to subscribed lenders when a watched parcel is filed.
+      </p>
+      <div style="margin-top:14px; display:flex; flex-wrap:wrap; gap:6px;">
+        <span class="tag tag-orange">AWS Bedrock</span>
+        <span class="tag tag-orange">Bedrock Action Groups</span>
+        <span class="tag tag-orange">Amazon SNS</span>
+        <span class="tag tag-blue">Base Sepolia</span>
+      </div>
+    </div>
+    <div class="card" style="border-color:rgba(96,165,250,0.25); background:rgba(96,165,250,0.04);">
+      <div style="font-size:10px; color:var(--blue); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:10px;">Agent 2 — Intelligence</div>
+      <h3 style="margin-bottom:10px;">Query → Verify → Respond</h3>
+      <p style="color:var(--muted); font-size:13px; line-height:1.7;">
+        Accepts natural-language queries: address, PIN, petition number, or zoning type.
+        Looks up the parcel in Supabase (434k records), verifies the petition on-chain,
+        returns cryptographic proof with a BaseScan link.
+        Every verified lookup is saved as a JSON report to Amazon S3.
+      </p>
+      <div style="margin-top:14px; display:flex; flex-wrap:wrap; gap:6px;">
+        <span class="tag tag-blue">AWS Bedrock</span>
+        <span class="tag tag-yellow">Amazon S3</span>
+        <span class="tag tag-blue">x402 · 0.001 ETH</span>
+        <span class="tag tag-green">Base Sepolia</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+
+<!-- ══ PIPELINE AGENT ════════════════════════════════════════════════ -->
+<section id="pipeline">
+<div class="page">
+
+  <div class="page-label">Agent 1 — Data Ingestion</div>
+  <h2>Pipeline Agent</h2>
+  <p style="color:var(--muted); font-size:13px; line-height:1.75; max-width:620px;">
+    County zoning records live in legislative portals, PDFs, and OnBase document systems —
+    no API, no standard format. The pipeline agent crawls these sources on a schedule,
+    extracts structured petition data, and writes each record permanently to the
+    <code>ZonePactRegistry</code> smart contract on Base Sepolia.
+    The result: a trustless, immutable on-chain registry that any protocol can query directly.
+  </p>
+
+  <div class="section-sep">Crawl → On-Chain flow</div>
+
+  <div class="flow">
+
+    <div class="flow-step">
+      <div class="flow-dot orange">1</div>
+      <div class="flow-body">
+        <div class="flow-title">Scheduled crawl <span class="muted">— County legislative portal</span></div>
+        <div class="flow-desc">
+          Bedrock agent wakes on schedule and issues HTTP requests to Wake County's
+          rezoning petition portal. Detects new filings by comparing petition numbers
+          against the on-chain <code>totalPetitions()</code> count.
+          No official API — agent parses raw HTML and PDF attachments.
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-dot yellow">2</div>
+      <div class="flow-body">
+        <div class="flow-title">Extract structured data <span class="muted">— Claude action group</span></div>
+        <div class="flow-desc">
+          Claude reads each petition document and extracts:
+          petition number, parcel PIN, petitioner name, present zoning,
+          proposed zoning, meeting date, vote result, and county.
+          Unstructured legislative text → typed JSON record.
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-dot blue">3</div>
+      <div class="flow-body">
+        <div class="flow-title">Enrich from ArcGIS <span class="muted">— parcel geometry + owner</span></div>
+        <div class="flow-desc">
+          Agent cross-references the PIN against Wake County ArcGIS to pull
+          owner name, site address, land use, assessed value, and polygon geometry.
+          Enriched record is written to Supabase for fast query access by the intelligence agent.
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-dot green">4</div>
+      <div class="flow-body">
+        <div class="flow-title">Write on-chain <span class="muted">— ZonePactRegistry.sol · Base Sepolia</span></div>
+        <div class="flow-desc">
+          Agent calls <code>registry.addPetition(petitionNumber, pin, petitioner,
+          presentZoning, proposedZoning, status, voteResult, meetingDate, county)</code>.<br>
+          Record is stored immutably on Base Sepolia with a <code>recordedAt</code> UNIX timestamp.
+          <span class="green">Cryptographic proof — tamper-proof, trustless, permanently auditable.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-dot purple">5</div>
+      <div class="flow-body">
+        <div class="flow-title">Fire SNS alert <span class="muted">— per-PIN filter policy</span></div>
+        <div class="flow-desc">
+          After writing on-chain, agent calls <code>sns.publish()</code> with a
+          <code>MessageAttribute</code> for the PIN.
+          Lenders subscribed via <code>POST /api/watch</code> receive a targeted email alert
+          the same day a petition is filed — not a broadcast, a PIN-matched notification.
+          Aave's liquidation bot subscribes each collateral PIN at loan origination.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-sep">AWS Bedrock — Action Groups</div>
+
+  <div class="card">
+    <pre><span class="c">// Bedrock Agent: ZonePactPipelineAgent</span>
+<span class="c">// Action Group: ZoningDataIngestion</span>
+
+<span class="n">crawl_county_portal</span>(county_id: <span class="s">"raleigh_nc"</span>)
+  → fetches new petition IDs from legislative portal
+  → returns list of unprocessed petition numbers
+
+<span class="n">extract_petition_data</span>(petition_number: <span class="s">"Z-51-2024"</span>)
+  → Claude reads PDF / HTML filing
+  → returns { pin, petitioner, present_zoning, proposed_zoning, vote_result, ... }
+
+<span class="n">write_to_registry</span>(petition: PetitionRecord)
+  → calls ZonePactRegistry.addPetition() on Base Sepolia
+  → returns { tx_hash, block_number, recorded_at }
+
+<span class="n">alert_subscribers</span>(pin: <span class="s">"1705485362"</span>, petition_number: <span class="s">"Z-51-2024"</span>)
+  → sns.publish() with FilterPolicy { pin: [<span class="s">"1705485362"</span>] }
+  → targeted email to lenders watching this parcel</pre>
+  </div>
+
+  <div class="card-grid card-grid-2">
+    <div class="card card-sm" style="background:rgba(249,115,22,0.04); border-color:rgba(249,115,22,0.2);">
+      <h3 style="color:var(--orange); margin-bottom:10px;">What gets written on-chain</h3>
+      <table>
+        <tr><td style="color:var(--muted);">petitionNumber</td><td><code>Z-51-2024</code></td></tr>
+        <tr><td style="color:var(--muted);">pin</td><td><code>1705485362</code></td></tr>
+        <tr><td style="color:var(--muted);">petitioner</td><td style="color:var(--text); font-size:12px;">STRATFORD COURT LLC</td></tr>
+        <tr><td style="color:var(--muted);">presentZoning</td><td><code>NB-2</code></td></tr>
+        <tr><td style="color:var(--muted);">proposedZoning</td><td><code>MU-2</code></td></tr>
+        <tr><td style="color:var(--muted);">voteResult</td><td style="color:var(--green);">Approved 5–1</td></tr>
+        <tr><td style="color:var(--muted);">recordedAt</td><td style="color:var(--muted); font-size:12px;">1713916800 (UNIX)</td></tr>
+      </table>
+    </div>
+    <div class="card card-sm" style="background:rgba(167,139,250,0.04); border-color:rgba(167,139,250,0.2);">
+      <h3 style="color:var(--purple); margin-bottom:10px;">SNS alert payload</h3>
+      <pre style="font-size:11px; margin:0;">{
+  <span class="n">Subject</span>: <span class="s">"ZonePact Alert: PIN 1705485362"</span>,
+  <span class="n">Message</span>: <span class="s">"New rezoning petition Z-51-2024
+  filed for your watched parcel.
+  Zoning change: NB-2 → MU-2
+  BaseScan: sepolia.basescan.org/..."</span>,
+  <span class="n">MessageAttributes</span>: {
+    <span class="n">pin</span>: { <span class="n">Value</span>: <span class="s">"1705485362"</span> }
+  }
+}</pre>
+    </div>
+  </div>
+
+</div>
+</section>
+
+
+<!-- ══ INTELLIGENCE AGENT ════════════════════════════════════════════ -->
+<section id="intelligence">
+<div class="page">
+
+  <div class="page-label">Agent 2 — Query & Verify</div>
+  <h2>Intelligence Agent</h2>
+  <p style="color:var(--muted); font-size:13px; line-height:1.75; max-width:620px;">
+    DeFi lenders query land records in plain English — address, PIN, or petition number.
+    The intelligence agent looks up the parcel in Supabase, verifies the petition on-chain,
+    and returns a structured response with cryptographic proof.
+    Every query costs 0.001 ETH via the x402 protocol, verified on Base Sepolia before the agent runs.
+  </p>
+
+  <div class="section-sep">Query flow</div>
+
+  <div class="flow">
+
+    <div class="flow-step">
+      <div class="flow-dot purple">1</div>
+      <div class="flow-body">
+        <div class="flow-title">x402 payment gate <span class="muted">— 0.001 ETH · Base Sepolia</span></div>
+        <div class="flow-desc">
+          Lender sends query to <code>POST /api/chat</code> with <code>X-Payment: {"txHash": "0x..."}</code>.
+          Backend calls <code>eth_getTransactionReceipt</code> + <code>eth_getTransactionByHash</code>:
+          checks recipient address, value ≥ 0.001 ETH, status == 0x1, block age &lt; 5 minutes.
+          Used hashes are tracked to prevent replay. Fails with HTTP 402 if not paid.
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-dot orange">2</div>
+      <div class="flow-body">
+        <div class="flow-title">Claude agent loop <span class="muted">— AWS Bedrock · anthropic.claude-opus-4-5</span></div>
+        <div class="flow-desc">
+          Bedrock agent receives the query and selects the right tool:
+          address or PIN → <code>lookup_parcel</code>,
+          petition number → <code>get_onchain_history</code>,
+          zoning type → <code>filter_by_zoning</code>.
+          Runs a multi-step reasoning loop — up to 12 iterations — until it has enough data to respond.
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-dot blue">3</div>
+      <div class="flow-body">
+        <div class="flow-title">lookup_parcel <span class="muted">— Supabase · 434k parcels</span></div>
+        <div class="flow-desc">
+          <code>lookup_parcel("3420 Quail Hollow Dr", "raleigh_nc")</code><br>
+          ILIKE address search against 434k Wake County parcel records.
+          Returns PIN, owner, site address, land use, assessed value,
+          area in acres, and whether the parcel has an active rezoning petition.
+          Polygon geometry returned as GeoJSON — rendered live on Mapbox map.
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-dot green">4</div>
+      <div class="flow-body">
+        <div class="flow-title">get_onchain_history <span class="muted">— ZonePactRegistry · Base Sepolia RPC</span></div>
+        <div class="flow-desc">
+          <code>registry.getPetition("TCZ-16-23")</code> called directly against the public Base Sepolia RPC.
+          Returns: petitioner, present zoning, proposed zoning, vote result, meeting date, and
+          <code>recordedAt</code> timestamp — cryptographic proof of what was verified and when.
+          BaseScan link included in every response.
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-dot yellow">5</div>
+      <div class="flow-body">
+        <div class="flow-title">S3 report upload <span class="muted">— Amazon S3 · zonepact-reports/</span></div>
+        <div class="flow-desc">
+          After every verified lookup, backend uploads a structured JSON report to S3:
+          <code>reports/raleigh_nc/TCZ-16-23-2026-05-07.json</code>.<br>
+          Contains owner, PIN, zoning change, blockchain proof, BaseScan link.
+          A 7-day presigned download URL is returned in the API response.
+          <span class="yellow">Centrifuge attaches this URL to their loan NFT metadata.</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-sep">Five agent tools</div>
+
+  <div class="card">
+    <table>
+      <thead>
+        <tr><th>Tool</th><th>Trigger</th><th>Data source</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>lookup_parcel</code></td>
+          <td style="color:var(--muted); font-size:12px;">Address or PIN query</td>
+          <td style="color:var(--muted); font-size:12px;">Supabase · 434k parcels</td>
+        </tr>
+        <tr>
+          <td><code>get_onchain_history</code></td>
+          <td style="color:var(--muted); font-size:12px;">Petition number or PIN</td>
+          <td style="color:var(--muted); font-size:12px;">ZonePactRegistry · Base Sepolia</td>
+        </tr>
+        <tr>
+          <td><code>search_petitions</code></td>
+          <td style="color:var(--muted); font-size:12px;">Keyword / petitioner name</td>
+          <td style="color:var(--muted); font-size:12px;">Supabase petitions table</td>
+        </tr>
+        <tr>
+          <td><code>filter_by_zoning</code></td>
+          <td style="color:var(--muted); font-size:12px;">"Show commercial rezonings"</td>
+          <td style="color:var(--muted); font-size:12px;">Supabase · zoning code match</td>
+        </tr>
+        <tr>
+          <td><code>get_county_stats</code></td>
+          <td style="color:var(--muted); font-size:12px;">"How many pending petitions?"</td>
+          <td style="color:var(--muted); font-size:12px;">Supabase aggregate</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-sep">Example query</div>
+
+  <div class="card-grid card-grid-2">
+    <div class="card card-sm">
+      <div style="font-size:11px; color:var(--muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.08em;">Request</div>
+      <pre style="margin:0; font-size:12px;"><span class="c">POST /api/chat</span>
+<span class="n">X-Payment</span>: { <span class="s">"txHash"</span>: <span class="s">"0xabc..."</span> }
+
+{
+  <span class="n">"message"</span>:   <span class="s">"Look up 3420 Quail Hollow Dr"</span>,
+  <span class="n">"county_id"</span>: <span class="s">"raleigh_nc"</span>
+}</pre>
+    </div>
+    <div class="card card-sm">
+      <div style="font-size:11px; color:var(--muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.08em;">Response</div>
+      <pre style="margin:0; font-size:12px;"><span class="n">PIN</span>:        <span class="s">1715185145</span>
+<span class="n">Owner</span>:      <span class="s">QUAIL HOLLOW PARTNERS</span>
+<span class="n">Value</span>:      <span class="kw">$3,408,144</span>
+<span class="n">Petition</span>:   <span class="s">TCZ-16-23</span>
+<span class="n">Change</span>:     <span class="s">CX-20-CU → Commercial MU</span>
+<span class="n">Vote</span>:       <span class="green">Finalized</span>
+⛓ <span class="green">Verified on Base Sepolia</span>
+<span class="n">report_url</span>: s3.amazonaws.com/...</pre>
+    </div>
+  </div>
+
+</div>
+</section>
+
+
+<!-- ══ CONTRACTS ════════════════════════════════════════════════════ -->
+<section id="contracts">
+<div class="page">
+
+  <div class="page-label">Base Sepolia · chainId 84532</div>
+  <h2>Deployed Contracts</h2>
+
+  <div class="card">
+
+    <div class="contract-row">
+      <div class="contract-icon">⛓</div>
+      <div style="flex:1;">
+        <div class="contract-name accent">ZonePactRegistry</div>
+        <div class="contract-addr">
+          <a href="https://sepolia.basescan.org/address/0x82b5Bb6A1F76484C28b87d59c984656DA9aD04Bc"
+             target="_blank" style="color:var(--muted); text-decoration:none;">
+            0x82b5Bb6A1F76484C28b87d59c984656DA9aD04Bc ↗
+          </a>
+        </div>
+        <div class="contract-desc">
+          Immutable on-chain registry storing all 426 Wake County rezoning petitions.
+          Written by the pipeline agent. Read by the intelligence agent.
+          Any DeFi protocol can call these functions directly — no ZonePact intermediary required.
+        </div>
+        <div class="fn-list">
+          <span class="tag tag-orange">addPetition(petitionNumber, pin, ...)</span>
+          <span class="tag tag-green">getPetition(petitionNumber)</span>
+          <span class="tag tag-green">getFullHistory(pin)</span>
+          <span class="tag tag-blue">totalPetitions()</span>
+        </div>
+        <div style="margin-top:16px;">
+          <table>
+            <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>petitionNumber</code></td><td style="color:var(--muted)">string</td><td style="color:var(--muted); font-size:12px;">e.g. TCZ-16-23</td></tr>
+              <tr><td><code>pin</code></td><td style="color:var(--muted)">string</td><td style="color:var(--muted); font-size:12px;">10-digit Wake County parcel PIN</td></tr>
+              <tr><td><code>presentZoning</code></td><td style="color:var(--muted)">string</td><td style="color:var(--muted); font-size:12px;">Zoning before petition e.g. NB-2</td></tr>
+              <tr><td><code>proposedZoning</code></td><td style="color:var(--muted)">string</td><td style="color:var(--muted); font-size:12px;">Requested zoning e.g. MU-2</td></tr>
+              <tr><td><code>voteResult</code></td><td style="color:var(--muted)">string</td><td style="color:var(--muted); font-size:12px;">Approved / Denied / Pending</td></tr>
+              <tr><td><code>recordedAt</code></td><td style="color:var(--muted)">uint256</td><td style="color:var(--muted); font-size:12px;">UNIX timestamp of on-chain write</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="contract-row">
+      <div class="contract-icon">🔮</div>
+      <div style="flex:1;">
+        <div class="contract-name" style="color:var(--purple);">ZonePactOracle</div>
+        <div class="contract-addr" style="color:var(--dim);">Base Sepolia — supporting contract</div>
+        <div class="contract-desc">
+          Companion contract that exposes the registry data in an oracle-compatible format.
+          Designed for DeFi protocols to pull zoning status directly into on-chain collateral
+          valuation logic without an off-chain API call.
+        </div>
+        <div class="fn-list">
+          <span class="tag tag-purple">getZoningStatus(pin)</span>
+          <span class="tag tag-purple">hasActivePetition(pin)</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="card card-sm" style="background:var(--card2);">
+    <div style="font-size:12px; color:var(--muted); margin-bottom:12px; text-transform:uppercase; letter-spacing:0.08em;">AWS Services</div>
+    <div style="display:flex; gap:32px; flex-wrap:wrap;">
+      <div>
+        <div style="font-size:11px; color:var(--muted); margin-bottom:4px;">AI Inference</div>
+        <div class="accent" style="font-weight:700;">Amazon Bedrock</div>
+        <div style="font-size:11px; color:var(--muted);">anthropic.claude-opus-4-5</div>
+      </div>
+      <div>
+        <div style="font-size:11px; color:var(--muted); margin-bottom:4px;">Report Storage</div>
+        <div class="yellow" style="font-weight:700;">Amazon S3</div>
+        <div style="font-size:11px; color:var(--muted);">zonepact-reports/ · 7-day presigned URLs</div>
+      </div>
+      <div>
+        <div style="font-size:11px; color:var(--muted); margin-bottom:4px;">Parcel Alerts</div>
+        <div class="purple" style="font-weight:700;">Amazon SNS</div>
+        <div style="font-size:11px; color:var(--muted);">Filter policy per PIN</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+
+<script>
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav a[href^="#"]');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const link = document.querySelector(`nav a[href="#${e.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { threshold: 0.35 });
+  sections.forEach(s => obs.observe(s));
+</script>
+
+</body>
+</html>
