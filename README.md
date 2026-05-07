@@ -10,7 +10,7 @@ ZonePact Intelligence is a pay-per-query AI agent that answers questions about r
 
 ## Demo
 
-[![ZonePact Demo](https://cdn.loom.com/sessions/thumbnails/e172c0096ed54ee89a7c98e73ce26f0c-with-play.gif)](https://www.loom.com/share/e172c0096ed54ee89a7c98e73ce26f0c)
+[![ZonePact Demo](assets/demo-thumbnail.png)](https://www.loom.com/share/e172c0096ed54ee89a7c98e73ce26f0c)
 
 ---
 
