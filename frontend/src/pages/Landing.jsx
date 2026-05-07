@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import Logo from '../components/Logo'
 
 const REGISTRY = '0x82b5Bb6A1F76484C28b87d59c984656DA9aD04Bc'
 const BASESCAN  = `https://sepolia.basescan.org/address/${REGISTRY}`
@@ -12,13 +13,8 @@ export default function Landing() {
       {/* ── Nav ──────────────────────────────────────────────────── */}
       <nav className="sticky top-0 z-50 flex items-center justify-between px-6 md:px-10 py-4"
         style={{ background: 'rgba(8,12,18,0.85)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-        <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-blue-500/20 border border-blue-500/30 flex items-center justify-center">
-            <svg className="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-            </svg>
-          </div>
+        <div className="flex items-center gap-2">
+          <Logo size={28} showName={false} />
           <span className="font-bold text-white tracking-tight">ZonePact</span>
         </div>
         <div className="flex items-center gap-2">
