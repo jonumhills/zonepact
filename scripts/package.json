@@ -1,0 +1,9 @@
+{
+  "name": "zonepact-scripts",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Compilation scripts for ZonePact contracts",
+  "dependencies": {
+    "solc": "0.8.20"
+  }
+}

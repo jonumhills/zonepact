@@ -1,0 +1,123 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  width: 100%;
+  background: #0d1117;
+  color: #e6edf3;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+}
+
+/* Map/Intel pages override — full-screen no-scroll */
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+/* ── Mapbox overrides ────────────────────────────────── */
+.mapboxgl-ctrl-bottom-right { bottom: 8px !important; right: 8px !important; }
+.mapboxgl-ctrl-bottom-left  { bottom: 8px !important; left: 8px !important; }
+
+.mapboxgl-ctrl-group {
+  background: rgba(22, 27, 34, 0.9) !important;
+  border: 1px solid #30363d !important;
+  border-radius: 8px !important;
+  backdrop-filter: blur(8px);
+}
+.mapboxgl-ctrl button {
+  background: transparent !important;
+  color: #8b949e !important;
+}
+.mapboxgl-ctrl button:hover { color: #e6edf3 !important; }
+
+.mapboxgl-popup-content {
+  background: rgba(22, 27, 34, 0.96);
+  border: 1px solid #30363d;
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: #e6edf3;
+  font-size: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+  min-width: 180px;
+  backdrop-filter: blur(12px);
+}
+.mapboxgl-popup-close-button {
+  color: #8b949e !important;
+  font-size: 16px;
+  right: 6px;
+  top: 4px;
+}
+.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip { border-top-color: #30363d; }
+.mapboxgl-popup-anchor-top    .mapboxgl-popup-tip { border-bottom-color: #30363d; }
+.mapboxgl-popup-anchor-left   .mapboxgl-popup-tip { border-right-color: #30363d; }
+.mapboxgl-popup-anchor-right  .mapboxgl-popup-tip { border-left-color: #30363d; }
+
+/* ── Petition pin markers ────────────────────────────── */
+.petition-marker {
+  position: relative;
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+}
+
+.petition-marker .pin-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px solid rgba(255,255,255,0.4);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+  transition: transform 0.15s ease;
+}
+
+.petition-marker:hover .pin-dot { transform: translate(-50%,-50%) scale(1.3); }
+
+.petition-marker .pin-pulse {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  animation: petitionPulse 2s ease-out infinite;
+}
+
+@keyframes petitionPulse {
+  0%   { transform: translate(-50%,-50%) scale(0.4); opacity: 0.8; }
+  100% { transform: translate(-50%,-50%) scale(2.2); opacity: 0; }
+}
+
+/* Colors per status */
+.petition-marker.pending   .pin-dot   { background: #f59e0b; }
+.petition-marker.pending   .pin-pulse { background: #f59e0b; }
+.petition-marker.approved  .pin-dot   { background: #10b981; }
+.petition-marker.denied    .pin-dot   { background: #ef4444; }
+.petition-marker.deferred  .pin-dot   { background: #facc15; }
+.petition-marker.unknown   .pin-dot   { background: #6b7280; }
+
+/* selected pin */
+.petition-marker.selected .pin-dot {
+  border-color: #fff;
+  transform: translate(-50%,-50%) scale(1.4);
+  box-shadow: 0 0 0 3px rgba(88,166,255,0.5);
+}
+
+/* ── Panel transitions ───────────────────────────────── */
+.panel-enter { transform: translateX(-100%); opacity: 0; }
+.panel-enter-done { transform: translateX(0); opacity: 1; transition: transform 0.28s cubic-bezier(.4,0,.2,1), opacity 0.28s; }
+.panel-exit-done { transform: translateX(-100%); opacity: 0; transition: transform 0.22s ease-in, opacity 0.22s; }
+
+/* ── Scrollbar ───────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #30363d; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #58a6ff40; }
